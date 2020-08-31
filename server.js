@@ -64,9 +64,8 @@ io.on('connection', socket => {
 
 });
 
-// server.listen(3000, () => console.log('server is running on port 3000'));
-// app.listen(process.env.PORT ||8080);
+ server.listen(3000, () => console.log('server is running on port 3000'));
+ app.listen(process.env.PORT ||8080);
 
-server = app.listen(process.env.PORT ||3000);
 
 
