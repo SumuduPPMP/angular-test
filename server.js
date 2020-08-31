@@ -3,7 +3,7 @@ const path = require('path');
 const http = require("http");
 const app = express();
 const server = http.createServer(app);
-const socket = require("socket.io");
+const socket = require("socket.io").listen(server);
 const io = socket(server);
 
 app.use(express.static(__dirname + '/dist/angular-test'));
@@ -64,7 +64,7 @@ io.on('connection', socket => {
 
 });
 
- server.listen(3000, () => console.log('server is running on port 3000'));
+ //server.listen(3000, () => console.log('server is running on port 3000'));
  app.listen(process.env.PORT ||8080);
 
 
