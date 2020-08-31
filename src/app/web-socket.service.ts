@@ -18,6 +18,7 @@ export class WebSocketService {
 
       this.socket.on(eventName,(data) =>{
         subscriber.next(data);
+        console.log("rtrtrttttttttttt")
       })
     })
   }
