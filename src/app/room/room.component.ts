@@ -1,3 +1,4 @@
+import { WebSocketService } from './../web-socket.service';
 import { element } from 'protractor';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import * as io from 'socket.io-client';
@@ -17,7 +18,7 @@ export class RoomComponent implements OnInit {
   ownVideo;
   socketRef: any;
   roomID: string;
-  uri:string ="ws://localhost:3000"
+  uri:string ="ws://0.0.0.0:3000"
   Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -35,11 +36,15 @@ export class RoomComponent implements OnInit {
   videoStream: MediaStream;
   test:string;
 
-  constructor(private data: DataService) {
+  constructor(private data: DataService, private WebSocketService:WebSocketService) {
     this.socketRef = io(this.uri);
   }
 
   ngOnInit(): void {
+
+    this.WebSocketService.listen("test").subscribe((data) =>{
+      console.log(data)
+    })
 
     // get the room id
     this.data.currentRoom.subscribe((data) => (this.roomID = data));

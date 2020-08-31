@@ -25,7 +25,7 @@ app.use(function(req, res, next) {
 });
 
 io.on('connection', socket => {
-
+  socket.emit("test","testing 1 2 3");
     socket.on("join room", roomID => {
         //console.log("user joioned for room id: " + roomID);
         if (users[roomID]) {
