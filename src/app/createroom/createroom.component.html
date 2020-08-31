@@ -1,0 +1,99 @@
+<div
+  class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm"
+>
+  <div class="my-0 mr-md-auto ml-5" style="color: #22b2c9;">
+    <h2 class="font-weight-normal float-left">PPMP MEET</h2>
+    <p class="float-right">&reg;</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row rounded p-1 mt-5">
+    <div id="ownVideoContainer" class="col-md-9 d-flex justify-content-center">
+      <div
+        #ownVideoDiv
+        class="embed-responsive embed-responsive-16by9"
+        style="
+          background-color: #202124;
+          border-radius: 5px;
+          position: relative;
+        "
+      >
+        <video #ownVideo id="ownVideo" class="embed-responsive-item"></video>
+        <div
+          class="d-flex justify-content-center"
+          style="
+            z-index: 1;
+            position: absolute;
+            bottom: 5px;
+            left: 0px;
+            width: 100%;
+          "
+        >
+          <button class="btn btn-outline-info m-1 ownVideoBtns">
+            <i class="fas fa-microphone"></i>
+          </button>
+          <button class="btn btn-outline-info m-1 ownVideoBtns">
+            <i class="fas fa-video"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="" class="col-md-3 d-flex align-items-center text-center">
+
+        <form #joinMeet="ngForm">
+          <h2 class="font-weight-normal">PPMP MEET</h2>
+          <p class="text-secondary">Enter the meeting code here to join meeting</p>
+          <div class="form-group mb-3">
+            <input
+              type="text"
+              class="form-control"
+              required
+              ngModel
+              name="room_code"
+              #room_code="ngModel"
+              placeholder="Enter the meeting code "
+            />
+
+            <small
+              *ngIf="room_code.touched && room_code.invalid"
+              class="text-danger"
+            >
+              <i class="fa fa-times-circle text-danger"></i>
+              Please enter a meeting code.
+            </small>
+
+            <!-- pattern="^([a-zA-Z0-9]{8}+)-([a-zA-Z0-9]{4}+)-([a-zA-Z0-9]{4}+)-([a-zA-Z0-9]{12})$"
+            <div *ngIf="room_code.invalid && (room_code.dirty || room_code.touched)">
+              <div *ngIf="room_code.errors.required">
+                <small class="text-danger">
+                  <i class="fa fa-times-circle text-danger"></i>
+                  Please enter a meeting code.
+                </small>
+              </div>
+              <div *ngIf="room_code.errors.pattern">
+                <small class="text-danger">
+                  <i class="fa fa-times-circle text-danger"></i>
+                  Meeting code is not valid.
+                </small>
+              </div>
+            </div> -->
+          </div>
+
+
+
+
+
+          <button
+            [disabled]="!joinMeet.valid"
+            class="btn btn-info"
+            [routerLink]="['/room', room_code.value]"
+            (click)="sendRoomId(room_code.value)"
+          >
+            Join the meeting
+          </button>
+        </form>
+
+    </div>
+  </div>
+</div>

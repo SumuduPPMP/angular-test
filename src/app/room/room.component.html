@@ -1,0 +1,51 @@
+
+
+  <!-- <div #container id="child" class="body" [ngClass]="{'d-flex justify-content-center': (userCount == 0 && newUserJoin==false),
+ 'padiingfirst':(userCount == 0 && newUserJoin==false)}" >
+
+
+  <div #videoDiv1 class="col-sm-12 embed-responsive embed-responsive-16by9 videoDiv"></div>
+
+
+</div>
+
+
+<div class="footer-bar border d-flex justify-content-center p-2">
+  <button class="btn btn-outline-dark m-2 videoBtns">
+    <i class="fas fa-microphone"></i>
+  </button>
+  <button class="btn btn-outline-danger m-2 videoBtns">
+    <i class="fa fa-phone"></i>
+  </button>
+  <button class="btn btn-outline-dark m-2 videoBtns">
+    <i class="fas fa-video"></i>
+  </button>
+</div> -->
+
+
+<div #mainContainer class="container-fluid bg-light">
+  <div class="row ">
+    <div class="user-alart text-center"><div class="btn btn-info ">Welcome To PPMP Meet</div></div>
+    <div #mainVideoDiv class="col-md-10 mainVideoDiv"></div>
+    <div #otherVideoDiv class="col-md-2 otherVideoDiv"></div>
+  </div>
+
+  <div #footer class="footer-bar border d-flex justify-content-center p-2">
+    <button class="btn btn-outline-dark m-2 videoBtns"  placement="top" ngbTooltip="{{TooltipMic}}" (click)="micOnOff()">
+      <i *ngIf="micOn" class="fas fa-microphone"></i>
+      <i *ngIf="!micOn" class="fas fa-microphone-slash"></i>
+    </button>
+    <button class="btn btn-outline-danger m-2 videoBtns"  placement="top" ngbTooltip="End Call" (click)="endCall()">
+      <i class="fa fa-phone"></i>
+    </button>
+    <button class="btn btn-outline-dark m-2 videoBtns"  placement="top" ngbTooltip="{{TooltipVideo}}" (click)="videoOnOff()">
+      <i *ngIf="videoOn" class="fas fa-video"></i>
+      <i *ngIf="!videoOn"class="fas fa-video-slash"></i>
+    </button>
+  </div>
+
+</div>
+
+
+
+

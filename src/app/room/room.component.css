@@ -1,0 +1,51 @@
+.example{
+  height: 100vh;
+}
+.videoDiv{
+  background-color: #202124;
+  border-radius: 5px;
+}
+.footer-bar{
+  position: fixed;
+  bottom: 0px;
+  left: 0px;
+  background-color:#eaebec;
+  width: 100%;
+  height: 80px;
+  animation: footerUp 2s;
+}
+.videoBtns{
+  width: 50px;
+  height: 50px;
+  border-radius: 25px;
+}
+.mainVideoDiv{
+  padding:0px;
+}
+.otherVideoDiv{
+  padding: 0px 3px;
+  height: 100vh;
+}
+.user-alart{
+  position: absolute;
+  top: 10px;
+  left: 0px;
+  width: 100%;
+  z-index: 1000;
+  opacity: 0;
+  animation: alertShowAndHide 5s;
+  }
+@keyframes footerUp {
+  from {bottom: -80px;}
+  to {bottom:0px;}
+}
+@keyframes alertShowAndHide {
+  0% {opacity: 0;}
+  40% {opacity: 1;}
+  50% {opacity: 1;}
+  60% {opacity: 1;}
+  100% {opacity: 0;}
+}
+
+
+
