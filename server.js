@@ -64,12 +64,12 @@ io.on('connection', socket => {
 
 });
 
-var port =  3001; // Use the port that Heroku provides or default to 3000
-server.listen(port, function() {
-  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
-});
+// var port =  3001; // Use the port that Heroku provides or default to 3000
+// server.listen(port, function() {
+//   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+// });
 
- //server.listen(3000, () => console.log('server is running on port 3000'));
+ server.listen(3001, () => console.log('server is running on port 3000'));
  app.listen(process.env.PORT ||8080);
 
 
