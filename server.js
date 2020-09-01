@@ -64,11 +64,9 @@ io.on('connection', socket => {
 
 });
 
-const host = '0.0.0.0';
-const port = 3000;
-
-server.listen(port, host, function() {
-  console.log("Server started.......");
+var port = process.env.PORT || 3000; // Use the port that Heroku provides or default to 3000
+server.listen(port, function() {
+  console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
 
  //server.listen(3000, () => console.log('server is running on port 3000'));
