@@ -20,7 +20,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   //socaket = io.connect('http://' + this.host);
-  uri:string ='http://' + this.host
+  uri:string ='http://0.0.0.0:3000' + this.host
   Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -43,7 +43,7 @@ export class RoomComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+console.log("host is"+this.host)
     this.WebSocketService.listen("test").subscribe((data) =>{
       console.log(data)
     })
