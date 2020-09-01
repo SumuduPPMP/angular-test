@@ -16,18 +16,10 @@ const users = {};
 
 const socketToRoom = {};
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
-    res.header("Access-Control-Allow-Headers", "Content-Type");
-    res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
-    next();
-});
-
 io.on('connection', socket => {
   socket.emit("test","testing 1 2 3");
     socket.on("join room", roomID => {
-        //console.log("user joioned for room id: " + roomID);
+        console.log("user joioned for room id: " + roomID);
         if (users[roomID]) {
             const length = users[roomID].length;
             if (length === 4) {
