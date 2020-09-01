@@ -18,7 +18,9 @@ export class RoomComponent implements OnInit {
   ownVideo;
   socketRef: any;
   roomID: string;
-  uri:string ="ws://localhost:3000/angular-test"
+  host = window.location.hostname;
+  //socaket = io.connect('http://' + this.host);
+  uri:string ='http://' + this.host
   Peer = require('simple-peer')
 
   peersRef: any = [];
