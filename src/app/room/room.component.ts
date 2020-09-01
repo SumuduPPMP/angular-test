@@ -18,7 +18,7 @@ export class RoomComponent implements OnInit {
   ownVideo;
   socketRef: any;
   roomID: string;
-  uri:string ="https://0.0.0.0:3000"
+  uri:string ="http://localhost:3000"
   Peer = require('simple-peer')
 
   peersRef: any = [];
