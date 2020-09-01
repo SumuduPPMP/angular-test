@@ -15,9 +15,9 @@ app.get('/*', function(req,res){
 const users = {};
 
 const socketToRoom = {};
-
+console.log("get out: ");
 io.on('connection', socket => {
-  console.log("get in: ");
+
   socket.emit("test","testing 1 2 3");
     socket.on("join room", roomID => {
         console.log("user joioned for room id: " + roomID);
