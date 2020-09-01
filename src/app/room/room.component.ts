@@ -19,7 +19,7 @@ export class RoomComponent implements OnInit {
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
-  uri:string ='http://localhost:3000'
+  uri:string ='/'
   Peer = require('simple-peer')
 
   peersRef: any = [];
