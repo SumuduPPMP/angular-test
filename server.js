@@ -62,7 +62,7 @@ io.on('connection', socket => {
 //   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 // });
 
- server.listen(3000, () => console.log('server is running on port 3000'));
+ server.listen(process.env.PORT ||3000, () => console.log('server is running on port 3000'));
  //app.listen(process.env.PORT ||8080);
 
 
