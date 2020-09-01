@@ -15,7 +15,6 @@ app.get('/*', function(req,res){
 const users = {};
 
 const socketToRoom = {};
-console.log("get out: ");
 io.on('connection', socket => {
 
   socket.emit("test","testing 1 2 3");
