@@ -39,6 +39,7 @@ export class RoomComponent implements OnInit {
 
   constructor(private data: DataService, private WebSocketService:WebSocketService) {
     this.socketRef = io(this.uri);
+    this.socketRef = io();
   }
 
   ngOnInit(): void {
