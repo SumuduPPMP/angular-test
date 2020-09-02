@@ -1,4 +1,4 @@
-import { WebSocketService } from './../web-socket.service';
+//import { WebSocketService } from './../web-socket.service';
 import { element } from 'protractor';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import * as io from 'socket.io-client';
@@ -37,7 +37,7 @@ export class RoomComponent implements OnInit {
   videoStream: MediaStream;
   test:string;
 
-  constructor(private data: DataService, private WebSocketService:WebSocketService) {
+  constructor(private data: DataService) {
     //this.socketRef = io(this.uri);
     this.socketRef = io();
   }
