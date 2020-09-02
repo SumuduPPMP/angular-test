@@ -107,6 +107,7 @@ console.log("room is fulll")
         this.socketRef.on('receiving returned signal', (payload) => {
           const item = this.peersRef.find((p) => p.peerID === payload.id);
           item.peer.signal(payload.signal);
+          console.log('receiving returned signal');
         });
       });
   }
