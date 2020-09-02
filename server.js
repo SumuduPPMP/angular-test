@@ -23,8 +23,6 @@ const socketToRoom = {};
 io.on('connection', socket => {
 
   console.log('Client connected');
-  // socket.on('disconnect', () => console.log('Client disconnected'));
-   socket.emit("test","testing 1 2 3");
     socket.on("join room", roomID => {
         console.log("user joioned for room id: " + roomID);
         if (users[roomID]) {
@@ -66,7 +64,7 @@ io.on('connection', socket => {
 
 const port = process.env.PORT ||3000;
  server.listen(port, () => console.log('server is running on port 8080'));
- //app.listen(process.env.PORT ||8080);
+ app.listen(process.env.PORT ||8080);
 
 
 
