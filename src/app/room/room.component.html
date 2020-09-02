@@ -31,14 +31,14 @@
   </div>
 
   <div #footer class="footer-bar border d-flex justify-content-center p-2">
-    <button class="btn btn-outline-dark m-2 videoBtns"  placement="top" ngbTooltip="{{TooltipMic}}" (click)="micOnOff()">
+    <button type="button" class="btn btn-outline-dark m-2 videoBtns"  placement="top" ngbTooltip="{{TooltipMic}}" (click)="micOnOff()">
       <i *ngIf="micOn" class="fas fa-microphone"></i>
       <i *ngIf="!micOn" class="fas fa-microphone-slash"></i>
     </button>
-    <button class="btn btn-outline-danger m-2 videoBtns"  placement="top" ngbTooltip="End Call" (click)="endCall()">
+    <button type="button" class="btn btn-outline-danger m-2 videoBtns"  placement="top" ngbTooltip="End Call" (click)="endCall()">
       <i class="fa fa-phone"></i>
     </button>
-    <button class="btn btn-outline-dark m-2 videoBtns"  placement="top" ngbTooltip="{{TooltipVideo}}" (click)="videoOnOff()">
+    <button type="button" class="btn btn-outline-dark m-2 videoBtns"  placement="top" ngbTooltip="{{TooltipVideo}}" (click)="videoOnOff()">
       <i *ngIf="videoOn" class="fas fa-video"></i>
       <i *ngIf="!videoOn"class="fas fa-video-slash"></i>
     </button>
