@@ -7,13 +7,12 @@ const server = http.createServer(app);
 const socket = require("socket.io");
 const io = socket(server);
 
-if(process.env.PROD){
+
   app.use(express.static(__dirname + '/dist/angular-test'));
 app.get('/*', function(req,res){
   res.sendFile(path.join(__dirname+
     '/dist/angular-test/index.html'));
 });
-}
 
 
 const users = {};
