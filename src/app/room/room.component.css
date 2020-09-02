@@ -24,6 +24,7 @@
 }
 .otherVideoDiv{
   padding: 0px 3px;
+  height: 100vh;
 }
 .user-alart{
   position: absolute;
