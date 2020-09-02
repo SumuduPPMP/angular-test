@@ -57,7 +57,7 @@ io.on('connection', socket => {
   //   });
 
 });
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+// setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 
 // var port =  3001; // Use the port that Heroku provides or default to 3000
 // server.listen(port, function() {
