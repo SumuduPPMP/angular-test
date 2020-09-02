@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const path = require('path');
 const http = require("http");
@@ -66,7 +67,8 @@ io.on('connection', socket => {
 //   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 // });
 
- server.listen(process.env.PORT ||8080, () => console.log('server is running on port 3000'));
+const port = process.env.PORT ||8080;
+ server.listen(port, () => console.log('server is running on port 8080'));
  //app.listen(process.env.PORT ||8080);
 
 
