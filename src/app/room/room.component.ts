@@ -50,6 +50,8 @@ export class RoomComponent implements OnInit {
       console.log(msg)
     })
 
+    this.data.currentRoom.subscribe((data) => (this.roomID = data));
+    console.log(this.roomID)
 //     this.WebSocketService.listen("test").subscribe((data) =>{
 //       console.log(data)
 //     })
