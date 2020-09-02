@@ -177,12 +177,15 @@ console.log("room is fulll")
 
   addUsersVideoStream(peersArray, stream) {
     peersArray.forEach((peer) => {
-      const video = document.createElement('video');
-      video.srcObject = stream;
-      video.addEventListener('loadedmetadata', () => {
-        video.play();
-      });
-      this.createDivForTheVideo(video);
+      peer.on("stream", stream => {
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        video.addEventListener('loadedmetadata', () => {
+          video.play();
+        });
+        this.createDivForTheVideo(video);
+    })
+
     });
   }
   createDivForTheVideo(video){
