@@ -50,70 +50,65 @@ export class RoomComponent implements OnInit {
       console.log(msg)
     })
 
+    // get the room id
     this.data.currentRoom.subscribe((data) => (this.roomID = data));
     console.log(this.roomID)
-//     this.WebSocketService.listen("test").subscribe((data) =>{
-//       console.log(data)
-//     })
+    // hardcodeed room id for development purpose
+    this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
+    this.socketRef.on('room full',yy=>{
+console.log("room is fulll")
+    })
 
-//     // get the room id
-//     this.data.currentRoom.subscribe((data) => (this.roomID = data));
-//     // hardcodeed room id for development purpose
-//     this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
-//     this.socketRef.on('room full',yy=>{
-// console.log("room is fulll")
-//     })
+    this.socketRef.on('user-disconnected',userId =>{
+      console.log("user disconencted" + userId)
+    })
 
-//     this.socketRef.on('user-disconnected',userId =>{
-//       console.log("user disconencted" + userId)
-//     })
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: true })
+      .then((stream) => {
 
-//     navigator.mediaDevices
-//       .getUserMedia({ video: true, audio: true })
-//       .then((stream) => {
+        const video = <HTMLVideoElement>(document.createElement('video'));
+        video.muted = true;
+        this.addVideoStream(video, stream);
+        this.socketRef.emit('join room', this.roomID);
 
-//         const video = <HTMLVideoElement>(document.createElement('video'));
-//         video.muted = true;
-//         this.addVideoStream(video, stream);
-//         this.socketRef.emit('join room', this.roomID);
+        this.socketRef.on('all users', (users) => {
+          const peers = [];
+          console.log('users count :' + users.length);
+          this.userCount=users.length;
+          users.forEach((userID) => {
+            const peer = this.createPeer(userID, this.socketRef.id, stream);
+            this.peersRef.push({
+              peerID: userID,
+              peer,
+            });
+            peers.push(peer);
+            console.log('peers created :' + peers.length);
+          });
+          this.peersArray = peers;
+          console.log("array="+this.peersArray)
+          this.addUsersVideoStream(this.peersArray, stream);
+        });
 
-//         this.socketRef.on('all users', (users) => {
-//           const peers = [];
-//           console.log('users count :' + users.length);
-//           this.userCount=users.length;
-//           users.forEach((userID) => {
-//             const peer = this.createPeer(userID, this.socketRef.id, stream);
-//             this.peersRef.push({
-//               peerID: userID,
-//               peer,
-//             });
-//             peers.push(peer);
-//             console.log('peers created :' + peers.length);
-//           });
-//           this.peersArray = peers;
-//           console.log("array="+this.peersArray)
-//           this.addUsersVideoStream(this.peersArray, stream);
-//         });
+        this.socketRef.on('user joined', (payload) => {
+          this.newUserJoin=true;
+          console.log('user joined');
+          const peer = this.addPeer(payload.signal, payload.callerID, stream);
+          this.peersRef.push({
+            peerID: payload.callerID,
+            peer,
+          });
 
-//         this.socketRef.on('user joined', (payload) => {
-//           this.newUserJoin=true;
-//           console.log('user joined');
-//           const peer = this.addPeer(payload.signal, payload.callerID, stream);
-//           this.peersRef.push({
-//             peerID: payload.callerID,
-//             peer,
-//           });
+          this.peersArray.push(peer);
+          const video = <HTMLVideoElement>(document.createElement('video'));
+          this.addVideoStreamForNewUser(video, stream);
+        });
 
-//           this.peersArray.push(peer);
-//           const video = <HTMLVideoElement>(document.createElement('video'));
-//           this.addVideoStreamForNewUser(video, stream);
-//         });
-
-//         this.socketRef.on('receiving returned signal', (payload) => {
-//           const item = this.peersRef.find((p) => p.peerID === payload.id);
-//           item.peer.signal(payload.signal);
-//         });
-//       });
+        this.socketRef.on('receiving returned signal', (payload) => {
+          const item = this.peersRef.find((p) => p.peerID === payload.id);
+          item.peer.signal(payload.signal);
+        });
+      });
   }
 
   //functions.....
