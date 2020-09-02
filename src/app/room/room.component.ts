@@ -19,7 +19,7 @@ export class RoomComponent implements OnInit {
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
-  uri:string ="https://angular-test-video.herokuapp.com"
+  // uri:string ="https://angular-test-video.herokuapp.com"
   Peer = require('simple-peer')
 
   peersRef: any = [];
