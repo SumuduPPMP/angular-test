@@ -46,6 +46,10 @@ export class RoomComponent implements OnInit {
       console.log(timeString)
     });
 
+    this.socketRef.on('test',(msg) =>{
+      console.log(msg)
+    })
+
 //     this.WebSocketService.listen("test").subscribe((data) =>{
 //       console.log(data)
 //     })

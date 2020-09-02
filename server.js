@@ -19,7 +19,7 @@ io.on('connection', socket => {
 
   console.log('Client connected');
   socket.on('disconnect', () => console.log('Client disconnected'));
-  // socket.emit("test","testing 1 2 3");
+   socket.emit("test","testing 1 2 3");
   //   socket.on("join room", roomID => {
   //       console.log("user joioned for room id: " + roomID);
   //       if (users[roomID]) {
