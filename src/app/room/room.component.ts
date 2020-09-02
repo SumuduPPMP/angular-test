@@ -42,11 +42,8 @@ export class RoomComponent implements OnInit {
   }
 
   ngOnInit(): void {
-let el
     this.socketRef.on('time', (timeString) => {
-      el = document.getElementById('server-time');
-      el.innerHTML = 'Server time: ' + timeString;
-      console.log(el)
+      console.log(timeString)
     });
 
 //     this.WebSocketService.listen("test").subscribe((data) =>{
