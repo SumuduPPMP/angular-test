@@ -39,7 +39,7 @@ export class RoomComponent implements OnInit {
   test:string;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
+   // this.socketRef = io(this.uri);
     this.socketRef = io();
   }
 
@@ -86,10 +86,12 @@ console.log("room is fulll")
             });
             peers.push(peer);
             console.log('peers created :' + peers.length);
+            this.addVideoStreamForNewUser(peer);
           });
           this.peersArray = peers;
           console.log("array="+this.peersArray)
-          this.addUsersVideoStream(this.peersArray);
+
+          //this.addUsersVideoStream(this.peersArray);
         });
 
         this.socketRef.on('user joined', (payload) => {
@@ -103,8 +105,8 @@ console.log("room is fulll")
 
           this.peersArray.push(peer);
           const video = <HTMLVideoElement>(document.createElement('video'));
-          //this.addVideoStreamForNewUser(this.peersArray);
-          this.addUsersVideoStream(this.peersArray);
+          this.addVideoStreamForNewUser(peer);
+          //this.addUsersVideoStream(this.peersArray);
         });
 
         this.socketRef.on('receiving returned signal', (payload) => {
@@ -128,7 +130,7 @@ console.log("room is fulll")
     peer.on('signal', (signal) => {
       console.log("create peer")
       console.log(signal)
-      if (count ==0) {
+      if (signal !=null) {
         this.socketRef.emit('sending signal', {
           userToSignal,
           callerID,
@@ -152,7 +154,7 @@ console.log("room is fulll")
     peer.on('signal', (signal) => {
       console.log("add peer")
       console.log(signal)
-      if (count ==0) {
+      if (signal !=null) {
         this.socketRef.emit('returning signal', { signal, callerID });
       }
       count++;
@@ -172,23 +174,23 @@ console.log("room is fulll")
 
     this.createDivForTheVideo(video);
   }
-  // addVideoStreamForNewUser(video: HTMLVideoElement, stream:MediaStream, peer) {
+  addVideoStreamForNewUser( peer) {
 
-  //   peer.on("stream", stream => {
-  //     const video = document.createElement('video');
-  //     video.srcObject = stream;
-  //     video.addEventListener('loadedmetadata', () => {
-  //       video.play();
-  //     });
-  //     this.createDivForTheVideo(video);
-  // })
+    peer.on("stream", stream => {
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      video.addEventListener('loadedmetadata', () => {
+        video.play();
+      });
+      this.createDivForTheVideo(video);
+  })
 
-  //   // video.srcObject = stream;
-  //   // video.addEventListener('loadedmetadata', () => {
-  //   //   video.play();
-  //   // });
-  //   // this.createDivForTheVideo(video);
-  // }
+    // video.srcObject = stream;
+    // video.addEventListener('loadedmetadata', () => {
+    //   video.play();
+    // });
+    // this.createDivForTheVideo(video);
+  }
 
   addUsersVideoStream(peersArray) {
 
