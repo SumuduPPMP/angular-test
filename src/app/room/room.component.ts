@@ -117,7 +117,7 @@ console.log("room is fulll")
 
   createPeer(userToSignal, callerID, stream) {
     var count = 0;
-    let peer = new this.Peer({
+    let peer = new SimplePeer({
       initiator: true,
       trickle: false,
       stream,
@@ -139,7 +139,7 @@ console.log("room is fulll")
 
   addPeer(incomingSignal, callerID, stream) {
     var count = 0;
-    const peer = new this.Peer({
+    const peer = new SimplePeer({
       initiator: false,
       trickle: false,
       stream,
