@@ -88,7 +88,7 @@ console.log("room is fulll")
           });
           this.peersArray = peers;
           console.log("array="+this.peersArray)
-          this.addUsersVideoStream(this.peersArray, stream);
+          this.addUsersVideoStream(this.peersArray);
         });
 
         this.socketRef.on('user joined', (payload) => {
@@ -169,7 +169,7 @@ console.log("room is fulll")
   addVideoStreamForNewUser(video: HTMLVideoElement, stream:MediaStream, peer) {
 
     peer.on("stream", stream => {
-      console.log("peer stream for new user"+stream)
+      console.log(stream)
       const video = document.createElement('video');
       video.srcObject = stream;
       video.addEventListener('loadedmetadata', () => {
@@ -185,11 +185,11 @@ console.log("room is fulll")
     // this.createDivForTheVideo(video);
   }
 
-  addUsersVideoStream(peersArray, stream) {
-    console.log("default stream="+stream)
-    peersArray.forEach((peer) => {
+  addUsersVideoStream(peersArray) {
+
+    {peersArray.map((peer, index) => {
       peer.on("stream", stream => {
-        console.log("peer stream"+stream)
+        console.log(stream)
         const video = document.createElement('video');
         video.srcObject = stream;
         video.addEventListener('loadedmetadata', () => {
@@ -197,6 +197,18 @@ console.log("room is fulll")
         });
         this.createDivForTheVideo(video);
     })
+
+  })}
+    peersArray.forEach((peer) => {
+    //   peer.on("stream", stream => {
+    //     console.log(stream)
+    //     const video = document.createElement('video');
+    //     video.srcObject = stream;
+    //     video.addEventListener('loadedmetadata', () => {
+    //       video.play();
+    //     });
+    //     this.createDivForTheVideo(video);
+    // })
 
     });
   }
