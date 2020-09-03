@@ -20,7 +20,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   // uri:string ="https://angular-test-video.herokuapp.com"
-  //Peer = require('simple-peer')
+  Peer = require('simple-peer')
 
   peersRef: any = [];
   peersArray: any = [];
@@ -117,7 +117,7 @@ console.log("room is fulll")
 
   createPeer(userToSignal, callerID, stream) {
     var count = 0;
-    let peer = new SimplePeer({
+    let peer = new this.Peer({
       initiator: true,
       trickle: false,
       stream,
@@ -139,7 +139,7 @@ console.log("room is fulll")
 
   addPeer(incomingSignal, callerID, stream) {
     var count = 0;
-    const peer = new SimplePeer({
+    const peer = new this.Peer({
       initiator: false,
       trickle: false,
       stream,
