@@ -21,7 +21,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   // uri:string ="https://angular-test-video.herokuapp.com"
-  Peer = require('simple-peer')
+  //Peer = require('simple-peer')
 
   peersRef: any = [];
   peersArray: any = [];
@@ -40,30 +40,18 @@ export class RoomComponent implements OnInit {
 
   constructor(private data: DataService) {
    // this.socketRef = io(this.uri);
-    this.socketRef = io();
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
-    this.socketRef.on('time', (timeString) => {
-      console.log(timeString)
-    });
+    this.socketRef = io();
 
-    this.socketRef.on('test',(msg) =>{
-      console.log(msg)
-    })
 
     // get the room id
     this.data.currentRoom.subscribe((data) => (this.roomID = data));
     console.log(this.roomID)
     // hardcodeed room id for development purpose
     this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
-    this.socketRef.on('room full',yy=>{
-console.log("room is fulll")
-    })
-
-    this.socketRef.on('user-disconnected',userId =>{
-      console.log("user disconencted" + userId)
-    })
 
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
