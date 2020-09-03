@@ -128,7 +128,7 @@ console.log("room is fulll")
     peer.on('signal', (signal) => {
       console.log("create peer")
       console.log(signal)
-      if (signal !=null) {
+      if (count ==0) {
         this.socketRef.emit('sending signal', {
           userToSignal,
           callerID,
@@ -152,7 +152,7 @@ console.log("room is fulll")
     peer.on('signal', (signal) => {
       console.log("add peer")
       console.log(signal)
-      if (signal !=null) {
+      if (count ==0) {
         this.socketRef.emit('returning signal', { signal, callerID });
       }
       count++;
@@ -172,23 +172,23 @@ console.log("room is fulll")
 
     this.createDivForTheVideo(video);
   }
-  addVideoStreamForNewUser(video: HTMLVideoElement, stream:MediaStream, peer) {
+  // addVideoStreamForNewUser(video: HTMLVideoElement, stream:MediaStream, peer) {
 
-    peer.on("stream", stream => {
-      const video = document.createElement('video');
-      video.srcObject = stream;
-      video.addEventListener('loadedmetadata', () => {
-        video.play();
-      });
-      this.createDivForTheVideo(video);
-  })
+  //   peer.on("stream", stream => {
+  //     const video = document.createElement('video');
+  //     video.srcObject = stream;
+  //     video.addEventListener('loadedmetadata', () => {
+  //       video.play();
+  //     });
+  //     this.createDivForTheVideo(video);
+  // })
 
-    // video.srcObject = stream;
-    // video.addEventListener('loadedmetadata', () => {
-    //   video.play();
-    // });
-    // this.createDivForTheVideo(video);
-  }
+  //   // video.srcObject = stream;
+  //   // video.addEventListener('loadedmetadata', () => {
+  //   //   video.play();
+  //   // });
+  //   // this.createDivForTheVideo(video);
+  // }
 
   addUsersVideoStream(peersArray) {
 
@@ -204,7 +204,7 @@ console.log("room is fulll")
     })
 
   })}
-    peersArray.forEach((peer) => {
+    // peersArray.forEach((peer) => {
     //   peer.on("stream", stream => {
     //     console.log(stream)
     //     const video = document.createElement('video');
@@ -215,7 +215,7 @@ console.log("room is fulll")
     //     this.createDivForTheVideo(video);
     // })
 
-    });
+    // });
   }
   createDivForTheVideo(video){
     const div = <HTMLDivElement>(document.createElement('div'));
