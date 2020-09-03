@@ -2,6 +2,7 @@
 import { element } from 'protractor';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import * as io from 'socket.io-client';
+import *as SimplePeer from "simple-peer";
 import { DataService } from './../data.service';
 
 @Component({
@@ -20,7 +21,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   // uri:string ="https://angular-test-video.herokuapp.com"
-  Peer = require('simple-peer')
+  //Peer = require('simple-peer')
 
   peersRef: any = [];
   peersArray: any = [];
