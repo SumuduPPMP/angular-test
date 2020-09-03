@@ -39,13 +39,11 @@ export class RoomComponent implements OnInit {
   test:string;
 
   constructor(private data: DataService) {
-   // this.socketRef = io(this.uri);
-    //this.socketRef = io();
+    //this.socketRef = io(this.uri);
+    this.socketRef = io();
   }
 
   ngOnInit(): void {
-    this.socketRef = io();
-
 
     // get the room id
     this.data.currentRoom.subscribe((data) => (this.roomID = data));
@@ -67,6 +65,8 @@ export class RoomComponent implements OnInit {
           console.log('users count :' + users.length);
           this.userCount=users.length;
           users.forEach((userID) => {
+            console.log("user id="+userID)
+            console.log("my id="+this.socketRef.id)
             const peer = this.createPeer(userID, this.socketRef.id, stream);
             this.peersRef.push({
               peerID: userID,

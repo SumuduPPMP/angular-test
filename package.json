@@ -36,7 +36,7 @@
     "nodemon": "^2.0.4",
     "path": "^0.12.7",
     "rxjs": "~6.5.5",
-    "simple-peer": "^9.7.2",
+    "simple-peer": "^9.6.2",
     "socket.io": "^2.3.0",
     "socket.io-client": "^2.3.0",
     "tslib": "^2.0.0",
