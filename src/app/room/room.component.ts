@@ -102,7 +102,7 @@ console.log("room is fulll")
 
           this.peersArray.push(peer);
           const video = <HTMLVideoElement>(document.createElement('video'));
-          this.addVideoStreamForNewUser(video, stream);
+          this.addVideoStreamForNewUser(video, stream, peer);
         });
 
         this.socketRef.on('receiving returned signal', (payload) => {
@@ -166,20 +166,30 @@ console.log("room is fulll")
 
     this.createDivForTheVideo(video);
   }
-  addVideoStreamForNewUser(video: HTMLVideoElement, stream:MediaStream) {
+  addVideoStreamForNewUser(video: HTMLVideoElement, stream:MediaStream, peer) {
 
-    video.srcObject = stream;
-    video.addEventListener('loadedmetadata', () => {
-      video.play();
-    });
-    this.createDivForTheVideo(video);
+    peer.on("stream", stream => {
+      console.log("peer stream for new user"+stream)
+      const video = document.createElement('video');
+      video.srcObject = stream;
+      video.addEventListener('loadedmetadata', () => {
+        video.play();
+      });
+      this.createDivForTheVideo(video);
+  })
+
+    // video.srcObject = stream;
+    // video.addEventListener('loadedmetadata', () => {
+    //   video.play();
+    // });
+    // this.createDivForTheVideo(video);
   }
 
   addUsersVideoStream(peersArray, stream) {
-    console.log(stream)
+    console.log("default stream="+stream)
     peersArray.forEach((peer) => {
       peer.on("stream", stream => {
-        console.log(stream)
+        console.log("peer stream"+stream)
         const video = document.createElement('video');
         video.srcObject = stream;
         video.addEventListener('loadedmetadata', () => {
