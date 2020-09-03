@@ -2,7 +2,7 @@
 import { element } from 'protractor';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import * as io from 'socket.io-client';
-import *as SimplePeer from "simple-peer";
+import * as SimplePeer from "simple-peer";
 import { DataService } from './../data.service';
 
 @Component({
