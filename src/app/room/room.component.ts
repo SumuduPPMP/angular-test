@@ -124,7 +124,7 @@ console.log("room is fulll")
     });
     console.log('created a peer');
     peer.on('signal', (signal) => {
-      if (count == 0) {
+      if (count < 3) {
         this.socketRef.emit('sending signal', {
           userToSignal,
           callerID,
@@ -146,7 +146,7 @@ console.log("room is fulll")
     });
 
     peer.on('signal', (signal) => {
-      if (count == 0) {
+      if (count < 3) {
         this.socketRef.emit('returning signal', { signal, callerID });
       }
       count++;
