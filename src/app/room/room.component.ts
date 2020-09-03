@@ -103,7 +103,8 @@ console.log("room is fulll")
 
           this.peersArray.push(peer);
           const video = <HTMLVideoElement>(document.createElement('video'));
-          this.addVideoStreamForNewUser(video, stream, peer);
+          //this.addVideoStreamForNewUser(this.peersArray);
+          this.addUsersVideoStream(this.peersArray);
         });
 
         this.socketRef.on('receiving returned signal', (payload) => {
