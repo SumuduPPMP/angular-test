@@ -122,8 +122,10 @@ console.log("room is fulll")
       trickle: false,
       stream,
     });
-    console.log('created a peer');
+
     peer.on('signal', (signal) => {
+      console.log("create peer")
+      console.log(signal)
       if (signal !=null) {
         this.socketRef.emit('sending signal', {
           userToSignal,
@@ -146,6 +148,8 @@ console.log("room is fulll")
     });
 
     peer.on('signal', (signal) => {
+      console.log("add peer")
+      console.log(signal)
       if (signal !=null) {
         this.socketRef.emit('returning signal', { signal, callerID });
       }
@@ -169,7 +173,6 @@ console.log("room is fulll")
   addVideoStreamForNewUser(video: HTMLVideoElement, stream:MediaStream, peer) {
 
     peer.on("stream", stream => {
-      console.log(stream)
       const video = document.createElement('video');
       video.srcObject = stream;
       video.addEventListener('loadedmetadata', () => {
