@@ -276,17 +276,17 @@ export class RoomComponent implements OnInit {
      this.data.camera.subscribe((data) => (this.videoOn = data));
      if(this.micOn){
       this.TooltipMic="Turn off mic"
-      audiotrack.enabled=true;
+      //audiotrack.enabled=true;
     }else{
       this.TooltipMic="Turn on mic"
-      audiotrack.enabled=false;
+     // audiotrack.enabled=false;
     }
      if(this.videoOn){
       this.TooltipVideo="Turn off camera"
-      videotrack.enabled=true;
+      //videotrack.enabled=true;
     }else{
       this.TooltipVideo="Turn on camera"
-      videotrack.enabled=false;
+      //videotrack.enabled=false;
     }
   }
   micOnOff(){
