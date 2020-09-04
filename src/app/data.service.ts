@@ -8,12 +8,17 @@ import { BehaviorSubject } from 'rxjs';
 export class DataService {
   roomId:string=" ";
   videoStream:MediaStream=null;
+  micOn=true;
+  cameraOn=true;
 
   private dataSource = new BehaviorSubject<string>(this.roomId);
   currentRoom = this.dataSource.asObservable();
 
-  private videoSource = new BehaviorSubject<MediaStream>(this.videoStream);
-  video=this.videoSource.asObservable();
+  private micState = new BehaviorSubject<boolean>(this.micOn);
+  mic=this.micState.asObservable();
+
+  private cameraState = new BehaviorSubject<boolean>(this.cameraOn);
+  camera=this.cameraState.asObservable();
 
   constructor() { }
 
@@ -22,14 +27,12 @@ export class DataService {
     this.dataSource.next(data);
     this.roomId = data;
   }
-
-  setVideoStream(data:MediaStream){
-
-    this.videoSource.next(data);
-    this.videoStream = data;
-    console.log( this.videoStream)
+  setMicState(data:boolean){
+    this.micState.next(data)
+    this.micOn=data
   }
-  getVideoStream(){
-    return this.videoStream;
+  setCameraState(data:boolean){
+    this.cameraState.next(data)
+    this.cameraOn=data
   }
 }

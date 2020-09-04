@@ -30,11 +30,13 @@
             width: 100%;
           "
         >
-          <button class="btn btn-outline-info m-1 ownVideoBtns">
-            <i class="fas fa-microphone"></i>
+          <button class="btn btn-sm m-2 ownVideoBtns" [ngClass]="{'btn-light':micOn,'btn-danger':!micOn}" placement="top" ngbTooltip="{{TooltipMic}}" (click)="micOnOff()">
+            <i *ngIf="micOn" class="text-info fas fa-microphone"></i>
+            <i *ngIf="!micOn" class="text-white fas fa-microphone-slash"></i>
           </button>
-          <button class="btn btn-outline-info m-1 ownVideoBtns">
-            <i class="fas fa-video"></i>
+          <button class="btn btn-sm btn-light m-2 ownVideoBtns" [ngClass]="{'btn-light':videoOn,'btn-danger':!videoOn}" placement="top" ngbTooltip="{{TooltipVideo}}" (click)="videoOnOff()">
+            <i *ngIf="videoOn" class="text-info fas fa-video"></i>
+            <i *ngIf="!videoOn" class="text-white fas fa-video-slash"></i>
           </button>
         </div>
       </div>

@@ -20,7 +20,7 @@ export class RoomComponent implements OnInit {
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
-  // uri:string ="https://angular-test-video.herokuapp.com"
+   uri:string ="https://angular-test-video.herokuapp.com"
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -29,24 +29,30 @@ export class RoomComponent implements OnInit {
   divId=0;
   userCount: number;
   newUserJoin = false;
-  micOn=true;
-  videoOn=true;
-  TooltipMic ="Mic Off"
-  TooltipVideo = "Video Off"
+  micOn = true;
+  videoOn = true;
+  TooltipMic:string;
+  TooltipVideo:string;
+  myStream;
 
 
   videoStream: MediaStream;
   test:string;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
 
-    // get the room id
+    // get the room information
     this.data.currentRoom.subscribe((data) => (this.roomID = data));
+    this.data.mic.subscribe((data) => (this.micOn = data));
+    this.data.camera.subscribe((data) => (this.videoOn = data));
+    this.micOn ? this.TooltipMic="Turn off mic": this.TooltipMic="Turn on mic"
+    this.videoOn ? this.TooltipVideo="Turn off camera": this.TooltipVideo="Turn on camera"
+
     console.log(this.roomID)
     // hardcodeed room id for development purpose
     this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
@@ -54,10 +60,10 @@ export class RoomComponent implements OnInit {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
-
+        this.myStream =stream;
         const video = <HTMLVideoElement>(document.createElement('video'));
         video.muted = true;
-        this.addVideoStream(video, stream);
+        this.addVideoStream(video, this.myStream);
         this.socketRef.emit('join room', this.roomID);
 
         this.socketRef.on('all users', (users) => {
@@ -67,7 +73,7 @@ export class RoomComponent implements OnInit {
           users.forEach((userID) => {
             console.log("user id="+userID)
             console.log("my id="+this.socketRef.id)
-            const peer = this.createPeer(userID, this.socketRef.id, stream);
+            const peer = this.createPeer(userID, this.socketRef.id, this.myStream);
             this.peersRef.push({
               peerID: userID,
               peer,
@@ -85,7 +91,7 @@ export class RoomComponent implements OnInit {
         this.socketRef.on('user joined', (payload) => {
           this.newUserJoin=true;
           console.log('user joined');
-          const peer = this.addPeer(payload.signal, payload.callerID, stream);
+          const peer = this.addPeer(payload.signal, payload.callerID, this.myStream);
           this.peersRef.push({
             peerID: payload.callerID,
             peer,
@@ -268,12 +274,27 @@ export class RoomComponent implements OnInit {
     return btdiv
   }
   micOnOff(){
-    !this.micOn ? this.TooltipMic="Mic Off": this.TooltipMic="Mic On"
+    var track = this.myStream.getAudioTracks()[0];
+    if(!this.micOn){
+      this.TooltipMic="Turn off mic"
+      track.enabled=true;
+    }else{
+      this.TooltipMic="Turn on mic"
+      track.enabled=false;
+    }
     this.micOn=!this.micOn;
   }
   videoOnOff(){
-    !this.videoOn ? this.TooltipVideo="Video Off": this.TooltipVideo="Video On"
+    var track = this.myStream.getVideoTracks()[0];
+    if(!this.videoOn){
+      this.TooltipVideo="Turn off camera"
+      track.enabled=true;
+    }else{
+      this.TooltipVideo="Turn on camera"
+      track.enabled=false;
+    }
     this.videoOn =! this.videoOn
+
   }
   endCall(){
   }
