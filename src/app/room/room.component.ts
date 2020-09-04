@@ -20,7 +20,7 @@ export class RoomComponent implements OnInit {
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
-   uri:string ="https://angular-test-video.herokuapp.com"
+   //uri:string ="https://angular-test-video.herokuapp.com"
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -40,8 +40,8 @@ export class RoomComponent implements OnInit {
   test:string;
 
   constructor(private data: DataService) {
-    this.socketRef = io(this.uri);
-    //this.socketRef = io();
+    //this.socketRef = io(this.uri);
+    this.socketRef = io();
   }
 
   ngOnInit(): void {
