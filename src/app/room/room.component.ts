@@ -46,13 +46,6 @@ export class RoomComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // get the room information
-    this.data.currentRoom.subscribe((data) => (this.roomID = data));
-    this.data.mic.subscribe((data) => (this.micOn = data));
-    this.data.camera.subscribe((data) => (this.videoOn = data));
-    this.micOn ? this.TooltipMic="Turn off mic": this.TooltipMic="Turn on mic"
-    this.videoOn ? this.TooltipVideo="Turn off camera": this.TooltipVideo="Turn on camera"
-
     console.log(this.roomID)
     // hardcodeed room id for development purpose
     this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
@@ -61,6 +54,7 @@ export class RoomComponent implements OnInit {
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         this.myStream =stream;
+        this.setRoomIdAndStates();
         const video = <HTMLVideoElement>(document.createElement('video'));
         video.muted = true;
         this.addVideoStream(video, this.myStream);
@@ -272,6 +266,28 @@ export class RoomComponent implements OnInit {
     button.append(i);
     btdiv.append(button);
     return btdiv
+  }
+  setRoomIdAndStates(){
+     // get the room information
+     var audiotrack = this.myStream.getAudioTracks()[0];
+     var videotrack = this.myStream.getVideoTracks()[0];
+     this.data.currentRoom.subscribe((data) => (this.roomID = data));
+     this.data.mic.subscribe((data) => (this.micOn = data));
+     this.data.camera.subscribe((data) => (this.videoOn = data));
+     if(this.micOn){
+      this.TooltipMic="Turn off mic"
+      audiotrack.enabled=true;
+    }else{
+      this.TooltipMic="Turn on mic"
+      audiotrack.enabled=false;
+    }
+     if(this.videoOn){
+      this.TooltipVideo="Turn off camera"
+      videotrack.enabled=true;
+    }else{
+      this.TooltipVideo="Turn on camera"
+      videotrack.enabled=false;
+    }
   }
   micOnOff(){
     var track = this.myStream.getAudioTracks()[0];
