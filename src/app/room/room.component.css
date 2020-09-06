@@ -12,6 +12,7 @@
   background-color:#eaebec;
   width: 100%;
   height: 80px;
+  z-index: 1000000;
   animation: footerUp 2s;
 }
 .videoBtns{
@@ -20,10 +21,17 @@
   border-radius: 25px;
 }
 .mainVideoDiv{
+  background-color: #202124d8;
   padding:0px;
+  height: 100vh;
+  display: block;
+  overflow: hidden;
 }
 .otherVideoDiv{
-  padding: 0px 3px;
+  position:fixed;
+  float:left;
+  width: 11%;
+  right: 0px;
   height: 100vh;
 }
 .user-alart{

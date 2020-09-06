@@ -20,7 +20,7 @@ export class RoomComponent implements OnInit {
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
-   //uri:string ="https://angular-test-video.herokuapp.com"
+   uri:string ="https://angular-test-video.herokuapp.com"
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -40,8 +40,8 @@ export class RoomComponent implements OnInit {
   test:string;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -226,20 +226,52 @@ export class RoomComponent implements OnInit {
     }, false);
     this.videoDivArray.push(div);
     this.videoDivArray.forEach(div => {
-      if(div.id==1){
+      if( div.id==0){
         this.mainVideoDiv.nativeElement.append(div);
         div.title="main"
+        div.style.backgroundColor="#202124"
+      }else{
+
+        if(this.mainVideoDiv.nativeElement.firstElementChild.id==0){
+          const oldMain=this.mainVideoDiv.nativeElement.firstElementChild;
+          oldMain.title="other";
+          oldMain.style.backgroundColor="#3a3b3d"
+          this.mainVideoDiv.nativeElement.firstElementChild.remove();
+          this.otherVideoDiv.nativeElement.append(oldMain);
+
+          this.mainVideoDiv.nativeElement.append(div);
+          div.title="main"
+          div.style.backgroundColor="#202124"
+        }else{
+          this.otherVideoDiv.nativeElement.append(div);
+          div.title="other"
+          div.style.backgroundColor="#3a3b3d"
+        }
+
       }
-      else{
-        this.otherVideoDiv.nativeElement.append(div);
-        div.title="other"
-      }
+      // if(div.id==0){
+      //   this.mainVideoDiv.nativeElement.append(div);
+      //   div.title="main"
+      // }
+      // if(div.id==1){
+      //   const oldMain=this.mainVideoDiv.nativeElement.firstElementChild;
+      //   oldMain.title="other";
+      //   this.mainVideoDiv.nativeElement.firstElementChild.remove();
+      //   this.otherVideoDiv.nativeElement.append(oldMain);
+
+      //   // this.mainVideoDiv.nativeElement.append(div);
+      //   // div.title="main"
+      // }
+      // if(div.id >1){
+      //   this.otherVideoDiv.nativeElement.append(div);
+      //   div.title="other"
+      // }
     });
     this.divId++;
   }
   createVideoButton(){
     const element = this;
-    const btdiv = document.createElement('div');
+    const btdiv = document.createElement('div')
     btdiv.className="p-1"
     btdiv.style.position="absolute"
     btdiv.style.zIndex="1"
@@ -248,7 +280,10 @@ export class RoomComponent implements OnInit {
     btdiv.style.width="100%"
     btdiv.style.opacity ="0"
     const button = document.createElement('button');
-    button.className="btn btn-outline-light btn-sm";
+    button.className="btn btn-light btn-sm d-flex justify-content-center align-items-center p-2";
+    button.style.width="25px"
+    button.style.height="25px"
+    button.style.borderRadius="12.5px"
     button.onclick = function(){
       console.log(element.videoDivArray.length)
       if(btdiv.parentElement.title=="other" && element.videoDivArray.length > 1){
@@ -257,14 +292,17 @@ export class RoomComponent implements OnInit {
           oldMain.title="other";
           element.mainVideoDiv.nativeElement.firstElementChild.remove();
           element.otherVideoDiv.nativeElement.append(oldMain);
+          oldMain.style.backgroundColor="#3a3b3d"
         }
         element.mainVideoDiv.nativeElement.append(btdiv.parentElement);
         btdiv.parentElement.title="main"
+        btdiv.parentElement.style.backgroundColor="#202124"
       }
 
     }
     const i = document.createElement("i");
     i.className="fas fa-thumbtack"
+    i.style.fontSize="10px"
     button.append(i);
     btdiv.append(button);
     return btdiv
