@@ -20,7 +20,7 @@ export class RoomComponent implements OnInit {
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
-  uri: string = 'https://angular-test-video.herokuapp.com';
+  //uri: string = 'https://angular-test-video.herokuapp.com';
   //uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
@@ -40,8 +40,8 @@ export class RoomComponent implements OnInit {
   test: string;
 
   constructor(private data: DataService) {
-    this.socketRef = io(this.uri);
-    //this.socketRef = io();
+    //this.socketRef = io(this.uri);
+    this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -108,11 +108,6 @@ export class RoomComponent implements OnInit {
           item.peer.signal(payload.signal);
         });
       });
-
-      this.socketRef.on('user-disconnected', userId => {
-        //if (peers[userId]) peers[userId].close()
-        console.log("user-disconnected")
-      })
   }
 
   //functions.....

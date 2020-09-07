@@ -50,11 +50,10 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
       const roomID = socketToRoom[socket.id];
-      io.socket.emit('user-disconnected',socket.id);
       let room = users[roomID];
       if (room) {
         console.log("use disconnect" + socket.id);
-        io.socket.emit('user-disconnected',socket.id);
+        socket.emit("disconnected",socket.id);
           room = room.filter(id => id !== socket.id);
           users[roomID] = room;
       }
