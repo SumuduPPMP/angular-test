@@ -44,6 +44,15 @@
   opacity: 0;
   animation: alertShowAndHide 5s;
   }
+  /* .infocard{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 250px;
+    background-color:#eaebec;
+    height:50px;
+    z-index: 1;
+  } */
 @keyframes footerUp {
   from {bottom: -80px;}
   to {bottom:0px;}

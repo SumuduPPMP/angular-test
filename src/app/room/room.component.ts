@@ -111,7 +111,7 @@ export class RoomComponent implements OnInit {
 
       this.socketRef.on('user-disconnected', userId => {
         //if (peers[userId]) peers[userId].close()
-        console.log("user-disconnected"+ userId)
+        console.log("user-disconnected")
       })
   }
 
