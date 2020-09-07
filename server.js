@@ -5,6 +5,7 @@ const http = require("http");
 const app = express();
 const server = http.createServer(app);
 const socket = require("socket.io");
+const { emit } = require("process");
 const io = socket(server);
 
 
@@ -51,6 +52,8 @@ io.on('connection', socket => {
       const roomID = socketToRoom[socket.id];
       let room = users[roomID];
       if (room) {
+        console.log("use disconnect" + socket.id)
+        socket.emit("disconnected",socket.id)
           room = room.filter(id => id !== socket.id);
           users[roomID] = room;
       }

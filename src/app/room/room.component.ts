@@ -21,6 +21,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   //uri: string = 'https://angular-test-video.herokuapp.com';
+  //uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -77,13 +78,9 @@ export class RoomComponent implements OnInit {
               peer,
             });
             peers.push(peer);
-            console.log('peers created :' + peers.length);
             this.addVideoStreamForNewUser(peer);
           });
           this.peersArray = peers;
-          console.log('array=' + this.peersArray);
-
-          //this.addUsersVideoStream(this.peersArray);
         });
 
         this.socketRef.on('user joined', (payload) => {
@@ -102,14 +99,16 @@ export class RoomComponent implements OnInit {
           this.peersArray.push(peer);
           const video = <HTMLVideoElement>document.createElement('video');
           this.addVideoStreamForNewUser(peer);
-          //this.addUsersVideoStream(this.peersArray);
         });
 
         this.socketRef.on('receiving returned signal', (payload) => {
           const item = this.peersRef.find((p) => p.peerID === payload.id);
           item.peer.signal(payload.signal);
-          console.log('receiving returned signal');
         });
+
+        this.socketRef.on("disconnected",userId =>{
+         console.log("user disconnet : " + userId)
+        })
       });
   }
 
@@ -124,8 +123,6 @@ export class RoomComponent implements OnInit {
     });
 
     peer.on('signal', (signal) => {
-      console.log('create peer');
-      console.log(signal);
       if (signal != null) {
         this.socketRef.emit('sending signal', {
           userToSignal,
@@ -148,7 +145,6 @@ export class RoomComponent implements OnInit {
     });
 
     peer.on('signal', (signal) => {
-      console.log('add peer');
       console.log(signal);
       if (signal != null) {
         this.socketRef.emit('returning signal', { signal, callerID });
@@ -161,7 +157,6 @@ export class RoomComponent implements OnInit {
     return peer;
   }
 
-  //
   addVideoStream(video: HTMLVideoElement, stream: MediaStream) {
     video.srcObject = stream;
     video.addEventListener('loadedmetadata', () => {
@@ -179,12 +174,6 @@ export class RoomComponent implements OnInit {
       });
       this.createDivForTheVideo(video);
     });
-
-    // video.srcObject = stream;
-    // video.addEventListener('loadedmetadata', () => {
-    //   video.play();
-    // });
-    // this.createDivForTheVideo(video);
   }
 
   addUsersVideoStream(peersArray) {
@@ -201,18 +190,6 @@ export class RoomComponent implements OnInit {
         });
       });
     }
-    // peersArray.forEach((peer) => {
-    //   peer.on("stream", stream => {
-    //     console.log(stream)
-    //     const video = document.createElement('video');
-    //     video.srcObject = stream;
-    //     video.addEventListener('loadedmetadata', () => {
-    //       video.play();
-    //     });
-    //     this.createDivForTheVideo(video);
-    // })
-
-    // });
   }
   createDivForTheVideo(video) {
     const div = <HTMLDivElement>document.createElement('div');

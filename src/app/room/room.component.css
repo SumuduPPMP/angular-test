@@ -11,7 +11,7 @@
   left: 0px;
   background-color:#eaebec;
   width: 100%;
-  height: 80px;
+  height: 75px;
   z-index: 1000000;
   animation: footerUp 2s;
 }
@@ -32,6 +32,7 @@
   float:left;
   width: 11%;
   right: 0px;
+  z-index: 100;
   height: 100vh;
 }
 .user-alart{
@@ -39,7 +40,7 @@
   top: 10px;
   left: 0px;
   width: 100%;
-  z-index: 1000;
+  z-index: 1;
   opacity: 0;
   animation: alertShowAndHide 5s;
   }
