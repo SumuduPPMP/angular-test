@@ -192,6 +192,8 @@ export class RoomComponent implements OnInit {
     }
   }
   createDivForTheVideo(video) {
+    video.style.transform ='rotateY(180deg)'
+    video.style.webkitTransform ='rotateY(180deg)'
     const div = <HTMLDivElement>document.createElement('div');
     div.className = 'embed-responsive embed-responsive-16by9 videoDiv rounded mt-1';
     div.style.backgroundColor = '#202124';
