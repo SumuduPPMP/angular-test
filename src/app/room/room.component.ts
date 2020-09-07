@@ -107,11 +107,12 @@ export class RoomComponent implements OnInit {
           const item = this.peersRef.find((p) => p.peerID === payload.id);
           item.peer.signal(payload.signal);
         });
-
-        this.socketRef.on("disconnected",userId =>{
-          console.log("user disconnet : " + userId)
-         })
       });
+
+      this.socketRef.on('user-disconnected', userId => {
+        //if (peers[userId]) peers[userId].close()
+        console.log("user-disconnected"+ userId)
+      })
   }
 
   //functions.....

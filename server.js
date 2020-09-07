@@ -53,7 +53,7 @@ io.on('connection', socket => {
       let room = users[roomID];
       if (room) {
         console.log("use disconnect" + socket.id);
-        socket.emit("disconnected",socket.id);
+        socket.to(roomID).broadcast.emit('user-disconnected',socket.id);
           room = room.filter(id => id !== socket.id);
           users[roomID] = room;
       }
