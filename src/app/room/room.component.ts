@@ -20,7 +20,7 @@ export class RoomComponent implements OnInit {
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
-  //uri: string = 'https://angular-test-video.herokuapp.com';
+  uri: string = 'https://angular-test-video.herokuapp.com';
   //uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
@@ -40,14 +40,16 @@ export class RoomComponent implements OnInit {
   test: string;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
     console.log(this.roomID);
     // hardcodeed room id for development purpose
     //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
+
+
 
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
@@ -107,8 +109,8 @@ export class RoomComponent implements OnInit {
         });
 
         this.socketRef.on("disconnected",userId =>{
-         console.log("user disconnet : " + userId)
-        })
+          console.log("user disconnet : " + userId)
+         })
       });
   }
 
