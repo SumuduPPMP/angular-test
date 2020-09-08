@@ -52,7 +52,7 @@ io.on('connection', socket => {
     const roomID = socketToRoom[socket.id];
       let room = users[roomID];
       if (room) {
-        console.log("user disconnect: " + user_id);
+        console.log("leave call: " + user_id);
         socket.broadcast.emit("user disconnect",user_id);
           room = room.filter(id => id !== socket.id);
           users[roomID] = room;
@@ -65,6 +65,8 @@ io.on('connection', socket => {
       // socket.emit("disconnected",{ room: roomID, userId: socket.id });
       let room = users[roomID];
       if (room) {
+        console.log("close tab: " + user_id);
+        socket.broadcast.emit("user disconnect",user_id);
           room = room.filter(id => id !== socket.id);
           users[roomID] = room;
       }
