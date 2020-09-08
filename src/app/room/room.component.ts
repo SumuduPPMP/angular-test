@@ -50,6 +50,9 @@ export class RoomComponent implements OnInit {
     //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
 
 
+    this.socketRef.on('disconnected', payload => {
+      console.log(payload)
+    });
 
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
