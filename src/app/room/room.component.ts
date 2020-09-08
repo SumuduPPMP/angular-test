@@ -57,7 +57,7 @@ export class RoomComponent implements OnInit {
         this.myStream = stream;
         this.setRoomIdAndStates();
         // hardcodeed room id for development purpose
-        this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
+        //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
         const video = <HTMLVideoElement>document.createElement('video');
         video.muted = true;
         this.addVideoStream(video, this.myStream);
@@ -328,5 +328,9 @@ export class RoomComponent implements OnInit {
     }
     this.videoOn = !this.videoOn;
   }
-  endCall() {}
+  endCall() {
+    setTimeout(()=>{
+      window.location.reload();
+    }, 300);
+  }
 }
