@@ -50,7 +50,7 @@ io.on('connection', socket => {
 
   socket.on('disconnect', () => {
       const roomID = socketToRoom[socket.id];
-      socket.emit("disconnected",roomID,socket.id);
+      socket.emit("disconnected",{ room: roomID, userId: socket.id });
       let room = users[roomID];
       if (room) {
         console.log("use disconnect" + socket.id);
