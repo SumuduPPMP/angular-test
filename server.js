@@ -60,16 +60,16 @@ io.on('connection', socket => {
 
   })
 
-  socket.on('disconnect', () => {
-      const roomID = socketToRoom[socket.id];
-      // socket.emit("disconnected",{ room: roomID, userId: socket.id });
-      let room = users[roomID];
-      if (room) {
-        console.log("close tab: " + user_id);
-          room = room.filter(id => id !== socket.id);
-          users[roomID] = room;
-      }
-  });
+  // socket.on('disconnect', () => {
+  //     const roomID = socketToRoom[socket.id];
+  //     // socket.emit("disconnected",{ room: roomID, userId: socket.id });
+  //     let room = users[roomID];
+  //     if (room) {
+  //       console.log("close tab: " + user_id);
+  //         room = room.filter(id => id !== socket.id);
+  //         users[roomID] = room;
+  //     }
+  // });
 });
 // setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 

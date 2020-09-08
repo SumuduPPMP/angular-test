@@ -20,7 +20,7 @@ export class RoomComponent implements OnInit {
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
-  uri: string = 'https://angular-test-video.herokuapp.com';
+  //uri: string = 'https://angular-test-video.herokuapp.com';
   //uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
@@ -40,8 +40,8 @@ export class RoomComponent implements OnInit {
   test: string;
 
   constructor(private data: DataService) {
-    this.socketRef = io(this.uri);
-    //this.socketRef = io();
+    //this.socketRef = io(this.uri);
+    this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -52,6 +52,7 @@ export class RoomComponent implements OnInit {
 
     this.socketRef.on('user disconnect', user_id => {
       console.log(user_id)
+      this.removeUserDiv(user_id)
     });
 
     navigator.mediaDevices
@@ -83,7 +84,7 @@ export class RoomComponent implements OnInit {
               peer,
             });
             peers.push(peer);
-            this.addVideoStreamForNewUser(peer);
+            this.addVideoStreamForNewUser(peer,userID);
           });
           this.peersArray = peers;
         });
@@ -103,7 +104,7 @@ export class RoomComponent implements OnInit {
 
           this.peersArray.push(peer);
           const video = <HTMLVideoElement>document.createElement('video');
-          this.addVideoStreamForNewUser(peer);
+          this.addVideoStreamForNewUser(peer,payload.callerID);
         });
 
         this.socketRef.on('receiving returned signal', (payload) => {
@@ -165,10 +166,11 @@ export class RoomComponent implements OnInit {
 
     this.createDivForTheVideo(video);
   }
-  addVideoStreamForNewUser(peer) {
+  addVideoStreamForNewUser(peer,userID) {
     peer.on('stream', (stream) => {
       const video = document.createElement('video');
       video.srcObject = stream;
+      video.id=userID;
       video.addEventListener('loadedmetadata', () => {
         video.play();
       });
@@ -285,6 +287,14 @@ export class RoomComponent implements OnInit {
     button.append(i);
     btdiv.append(button);
     return btdiv;
+  }
+  removeUserDiv(userID){
+    this.videoDivArray.forEach((div) => {
+      var removeVideo = div.firstElementChild;
+      if(removeVideo.id==userID){
+        div.remove()
+      }
+    });
   }
   setRoomIdAndStates() {
     // get the room information
