@@ -20,6 +20,12 @@
   height: 50px;
   border-radius: 25px;
 }
+.usercount{
+  position: absolute;
+  right:30px;
+  bottom: 0px;
+  font-size: 20px;
+}
 .mainVideoDiv{
   background-color: #202124d8;
   padding:0px;

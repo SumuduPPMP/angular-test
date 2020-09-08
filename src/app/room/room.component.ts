@@ -64,13 +64,14 @@ export class RoomComponent implements OnInit {
         //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
         const video = <HTMLVideoElement>document.createElement('video');
         video.muted = true;
+        this.userCount =1;
         this.addVideoStream(video, this.myStream);
         this.socketRef.emit('join room', this.roomID);
 
         this.socketRef.on('all users', (users) => {
           const peers = [];
           console.log('users count :' + users.length);
-          this.userCount = users.length;
+          this.userCount = this.userCount+users.length;
           users.forEach((userID) => {
             console.log('user id=' + userID);
             console.log('my id=' + this.socketRef.id);
@@ -92,6 +93,7 @@ export class RoomComponent implements OnInit {
         this.socketRef.on('user joined', (payload) => {
           this.newUserJoin = true;
           console.log('user joined');
+          this.userCount++;
           const peer = this.addPeer(
             payload.signal,
             payload.callerID,
