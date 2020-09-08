@@ -20,7 +20,7 @@ export class RoomComponent implements OnInit {
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
-  //uri: string = 'https://angular-test-video.herokuapp.com';
+  uri: string = 'https://angular-test-video.herokuapp.com';
   //uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
@@ -40,8 +40,8 @@ export class RoomComponent implements OnInit {
   test: string;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -293,6 +293,17 @@ export class RoomComponent implements OnInit {
       var removeVideo = div.firstElementChild;
       if(removeVideo.id==userID){
         div.remove()
+        const index = this.videoDivArray.indexOf(div);
+        if (index > -1) {
+          this.videoDivArray.splice(index, 1);
+        }
+        if(!this.mainVideoDiv.nativeElement.firstElementChild){
+          const oldother = this.otherVideoDiv.nativeElement.firstElementChild;
+          oldother.title = 'main';
+          this.otherVideoDiv.nativeElement.firstElementChild.remove();
+          this.mainVideoDiv.nativeElement.append(oldother);
+          oldother.style.backgroundColor = '#202124';
+        }
       }
     });
   }

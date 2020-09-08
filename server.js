@@ -54,6 +54,7 @@ io.on('connection', socket => {
       if (room) {
         console.log("leave call: " + user_id);
         socket.broadcast.emit("user disconnect",user_id);
+        //io.sockets.emit('users_count', clients);
           room = room.filter(id => id !== socket.id);
           users[roomID] = room;
       }
