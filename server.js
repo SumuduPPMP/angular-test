@@ -48,18 +48,27 @@ io.on('connection', socket => {
       io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
   });
 
+  socket.on('user disconnect', user_id =>{
+    const roomID = socketToRoom[socket.id];
+      let room = users[roomID];
+      if (room) {
+        console.log("user disconnect: " + user_id);
+        socket.broadcast.emit("user disconnect",user_id);
+          room = room.filter(id => id !== socket.id);
+          users[roomID] = room;
+      }
+
+  })
+
   socket.on('disconnect', () => {
       const roomID = socketToRoom[socket.id];
       // socket.emit("disconnected",{ room: roomID, userId: socket.id });
-      socket.emit("disconnected","disconnected");
       let room = users[roomID];
       if (room) {
-        console.log("user disconnect : " + socket.id);
           room = room.filter(id => id !== socket.id);
           users[roomID] = room;
       }
   });
-
 });
 // setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
 

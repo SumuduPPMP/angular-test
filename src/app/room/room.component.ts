@@ -50,8 +50,8 @@ export class RoomComponent implements OnInit {
     //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
 
 
-    this.socketRef.on('disconnected', payload => {
-      console.log(payload)
+    this.socketRef.on('user disconnect', user_id => {
+      console.log(user_id)
     });
 
     navigator.mediaDevices
@@ -332,6 +332,7 @@ export class RoomComponent implements OnInit {
     this.videoOn = !this.videoOn;
   }
   endCall() {
+    this.socketRef.emit('user disconnect',this.socketRef.id)
     setTimeout(()=>{
       window.location.reload();
     }, 300);
