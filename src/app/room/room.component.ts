@@ -21,7 +21,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   //uri: string = 'https://angular-test-video.herokuapp.com';
-  uri: string = 'ws://localhost:3000';
+  //uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -40,8 +40,8 @@ export class RoomComponent implements OnInit {
   videoStream: MediaStream;
 
   constructor(private data: DataService) {
-    this.socketRef = io(this.uri);
-    //this.socketRef = io();
+    //this.socketRef = io(this.uri);
+    this.socketRef = io();
   }
 
   ngOnInit(): void {
