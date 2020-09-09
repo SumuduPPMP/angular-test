@@ -34,10 +34,10 @@ export class RoomComponent implements OnInit {
   videoOn = true;
   TooltipMic: string;
   TooltipVideo: string;
+  currentTime;
   myStream;
 
   videoStream: MediaStream;
-  test: string;
 
   constructor(private data: DataService) {
     //this.socketRef = io(this.uri);
@@ -49,10 +49,12 @@ export class RoomComponent implements OnInit {
     // hardcodeed room id for development purpose
     //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
 
-
-    this.socketRef.on('user disconnect', user_id => {
-      console.log(user_id)
-      this.removeUserDiv(user_id)
+    this.socketRef.on('user disconnect', (user_id) => {
+      this.userCount--;
+      this.removeUserDiv(user_id);
+    });
+    this.socketRef.on('time', time => {
+      this.getCurrentTime();
     });
 
     navigator.mediaDevices
@@ -64,14 +66,14 @@ export class RoomComponent implements OnInit {
         //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
         const video = <HTMLVideoElement>document.createElement('video');
         video.muted = true;
-        this.userCount =1;
+        this.userCount = 1;
         this.addVideoStream(video, this.myStream);
         this.socketRef.emit('join room', this.roomID);
 
         this.socketRef.on('all users', (users) => {
           const peers = [];
           console.log('users count :' + users.length);
-          this.userCount = this.userCount+users.length;
+          this.userCount = this.userCount + users.length;
           users.forEach((userID) => {
             console.log('user id=' + userID);
             console.log('my id=' + this.socketRef.id);
@@ -85,7 +87,7 @@ export class RoomComponent implements OnInit {
               peer,
             });
             peers.push(peer);
-            this.addVideoStreamForNewUser(peer,userID);
+            this.addVideoStreamForNewUser(peer, userID);
           });
           this.peersArray = peers;
         });
@@ -106,7 +108,7 @@ export class RoomComponent implements OnInit {
 
           this.peersArray.push(peer);
           const video = <HTMLVideoElement>document.createElement('video');
-          this.addVideoStreamForNewUser(peer,payload.callerID);
+          this.addVideoStreamForNewUser(peer, payload.callerID);
         });
 
         this.socketRef.on('receiving returned signal', (payload) => {
@@ -168,11 +170,11 @@ export class RoomComponent implements OnInit {
 
     this.createDivForTheVideo(video);
   }
-  addVideoStreamForNewUser(peer,userID) {
+  addVideoStreamForNewUser(peer, userID) {
     peer.on('stream', (stream) => {
       const video = document.createElement('video');
       video.srcObject = stream;
-      video.id=userID;
+      video.id = userID;
       video.addEventListener('loadedmetadata', () => {
         video.play();
       });
@@ -196,10 +198,11 @@ export class RoomComponent implements OnInit {
     }
   }
   createDivForTheVideo(video) {
-    video.style.transform ='rotateY(180deg)'
-    video.style.webkitTransform ='rotateY(180deg)'
+    video.style.transform = 'rotateY(180deg)';
+    video.style.webkitTransform = 'rotateY(180deg)';
     const div = <HTMLDivElement>document.createElement('div');
-    div.className = 'embed-responsive embed-responsive-16by9 videoDiv rounded mt-1';
+    div.className =
+      'embed-responsive embed-responsive-16by9 videoDiv rounded mt-1';
     div.style.backgroundColor = '#202124';
     div.appendChild(video);
     div.id = this.divId.toString();
@@ -241,10 +244,10 @@ export class RoomComponent implements OnInit {
         div.title = 'other';
         div.style.backgroundColor = '#3a3b3d';
       }
-      if(div.title =='main'){
+      if (div.title == 'main') {
         div.style.backgroundColor = '#202124';
       }
-      if(div.title =='other'){
+      if (div.title == 'other') {
       }
     });
     this.divId++;
@@ -290,16 +293,16 @@ export class RoomComponent implements OnInit {
     btdiv.append(button);
     return btdiv;
   }
-  removeUserDiv(userID){
+  removeUserDiv(userID) {
     this.videoDivArray.forEach((div) => {
       var removeVideo = div.firstElementChild;
-      if(removeVideo.id==userID){
-        div.remove()
+      if (removeVideo.id == userID) {
+        div.remove();
         const index = this.videoDivArray.indexOf(div);
         if (index > -1) {
           this.videoDivArray.splice(index, 1);
         }
-        if(!this.mainVideoDiv.nativeElement.firstElementChild){
+        if (!this.mainVideoDiv.nativeElement.firstElementChild) {
           const oldother = this.otherVideoDiv.nativeElement.firstElementChild;
           oldother.title = 'main';
           this.otherVideoDiv.nativeElement.firstElementChild.remove();
@@ -331,6 +334,22 @@ export class RoomComponent implements OnInit {
       videotrack.enabled = false;
     }
   }
+  getCurrentTime() {
+    var date = new Date();
+    var hr = date.getHours();
+    var min = date.getMinutes().toString();
+    if (min < "10") {
+
+      min = '0' + min;
+    }
+    var ampm = 'AM';
+    if (hr > 12) {
+      hr -= 12;
+      ampm = 'PM';
+    }
+    var time = (hr + ':' + min + ampm).toString()
+    this.currentTime=time;
+  }
   micOnOff() {
     var track = this.myStream.getAudioTracks()[0];
     if (!this.micOn) {
@@ -354,9 +373,8 @@ export class RoomComponent implements OnInit {
     this.videoOn = !this.videoOn;
   }
   endCall() {
-    this.socketRef.emit('user disconnect',this.socketRef.id)
-    this.userCount--;
-    setTimeout(()=>{
+    this.socketRef.emit('user disconnect', this.socketRef.id);
+    setTimeout(() => {
       window.location.reload();
     }, 300);
   }

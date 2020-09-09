@@ -40,6 +40,7 @@
   right: 0px;
   z-index: 100;
   height: 100vh;
+  margin-top:56px
 }
 .user-alart{
   position: absolute;
@@ -50,15 +51,16 @@
   opacity: 0;
   animation: alertShowAndHide 5s;
   }
-  /* .infocard{
+  .timecard{
+    padding-top: 5px;
     position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 250px;
     background-color:#eaebec;
+    top: 3px;
+    right: 3px;
+    width: 250px;
     height:50px;
     z-index: 1;
-  } */
+  }
 @keyframes footerUp {
   from {bottom: -80px;}
   to {bottom:0px;}

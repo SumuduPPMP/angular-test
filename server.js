@@ -72,7 +72,7 @@ io.on('connection', socket => {
   //     }
   // });
 });
-// setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+ setInterval(() => io.emit('time', new Date()), 1000);
 
 const port = process.env.PORT ||3000;
  server.listen(port, () => console.log('server is running on port 8080'));

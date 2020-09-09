@@ -26,7 +26,12 @@
 <div #mainContainer class="container-fluid bg-light">
   <div class="row ">
     <div class="user-alart text-center"><div class="btn btn-info ">Welcome To PPMP Meet</div></div>
-    <!-- <div class="infocard rounded border border-secondary"></div> -->
+    <div class="timecard rounded border border-secondary d-flex justify-content-center align-items-center">
+      <div type="button" class="d-flex align-items-center m-2 videoBtns">
+        <i class="fas fa-users mr-1"></i>
+        <p style="font-size:medium">{{userCount}}</p>
+      </div>
+      <h4>{{currentTime}}</h4></div>
     <div #mainVideoDiv class="col-md-12 mainVideoDiv d-flex align-items-center"></div>
     <div #otherVideoDiv class="otherVideoDiv mr-1"></div>
   </div>
@@ -43,10 +48,6 @@
       <i *ngIf="videoOn" class="fas fa-video"></i>
       <i *ngIf="!videoOn"class="fas fa-video-slash"></i>
     </button>
-    <div type="button" class="d-flex align-items-center m-2 videoBtns usercount">
-      <i class="fas fa-users mr-1"></i>
-      <p style="font-size:medium">{{userCount}}</p>
-    </div>
   </div>
 
 </div>
