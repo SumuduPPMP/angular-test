@@ -203,6 +203,7 @@ export class RoomComponent implements OnInit {
     div.className =
       'embed-responsive embed-responsive-16by9 videoDiv rounded mt-1';
     div.style.backgroundColor = '#202124';
+    div.style.height ="100%"
     div.appendChild(video);
     div.id = this.divId.toString();
     div.onclick = function () {
