@@ -50,7 +50,6 @@ export class RoomComponent implements OnInit {
     //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
 
     this.socketRef.on('user disconnect', (user_id) => {
-      this.userCount--;
       this.removeUserDiv(user_id);
     });
     this.socketRef.on('time', time => {
@@ -297,6 +296,7 @@ export class RoomComponent implements OnInit {
     this.videoDivArray.forEach((div) => {
       var removeVideo = div.firstElementChild;
       if (removeVideo.id == userID) {
+        this.userCount--;
         div.remove();
         const index = this.videoDivArray.indexOf(div);
         if (index > -1) {
