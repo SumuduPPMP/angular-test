@@ -245,7 +245,6 @@ export class RoomComponent implements OnInit {
       }
       if (div.title == 'main') {
         div.style.backgroundColor = '#202124';
-        div.style.height ="100%"
       }
       if (div.title == 'other') {
       }
