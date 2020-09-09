@@ -355,6 +355,7 @@ export class RoomComponent implements OnInit {
   }
   endCall() {
     this.socketRef.emit('user disconnect',this.socketRef.id)
+    this.userCount--;
     setTimeout(()=>{
       window.location.reload();
     }, 300);
