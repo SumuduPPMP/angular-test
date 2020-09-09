@@ -65,6 +65,7 @@ io.on('connection', socket => {
       const roomID = socketToRoom[socket.id];
       let room = users[roomID];
       if (room) {
+        socket.broadcast.emit("anyway disconnect",socket.id);
           room = room.filter(id => id !== socket.id);
           users[roomID] = room;
       }

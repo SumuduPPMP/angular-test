@@ -52,6 +52,9 @@ export class RoomComponent implements OnInit {
     this.socketRef.on('user disconnect', (user_id) => {
       this.removeUserDiv(user_id);
     });
+    this.socketRef.on('anyway disconnect', (user_id) => {
+      this.removeUserDiv(user_id);
+    });
     this.socketRef.on('time', time => {
       this.getCurrentTime();
     });
