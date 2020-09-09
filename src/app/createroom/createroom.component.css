@@ -12,3 +12,20 @@
     -moz-transform:rotateY(180deg); /* Firefox */
     /* object-fit: cover; */
   }
+.custom_margin{
+  margin-left: 50px;
+}
+
+   /* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+  .custom{
+    margin-top:20px;
+  }
+  .mobile_text{
+    display:none;
+  }
+  .custom_margin{
+    margin-left: 0px;
+  }
+
+ }
