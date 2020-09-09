@@ -21,7 +21,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   //uri: string = 'https://angular-test-video.herokuapp.com';
-  //uri: string = 'ws://localhost:3000';
+  uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -40,8 +40,8 @@ export class RoomComponent implements OnInit {
   videoStream: MediaStream;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -203,7 +203,6 @@ export class RoomComponent implements OnInit {
     div.className =
       'embed-responsive embed-responsive-16by9 videoDiv rounded mt-1';
     div.style.backgroundColor = '#202124';
-    div.style.height ="100%"
     div.appendChild(video);
     div.id = this.divId.toString();
     div.onclick = function () {
@@ -246,6 +245,7 @@ export class RoomComponent implements OnInit {
       }
       if (div.title == 'main') {
         div.style.backgroundColor = '#202124';
+        div.style.height ="100%"
       }
       if (div.title == 'other') {
       }
@@ -338,17 +338,21 @@ export class RoomComponent implements OnInit {
   getCurrentTime() {
     var date = new Date();
     var hr = date.getHours();
-    var min = date.getMinutes().toString();
-    if (min < "10") {
-
-      min = '0' + min;
+    var min = date.getMinutes();
+    var minu;
+    var minutes;
+    if (min < 10) {
+      minutes = '0' + min.toString()
+      minu= minutes
+    }else{
+      minu = min
     }
     var ampm = 'AM';
     if (hr > 12) {
       hr -= 12;
       ampm = 'PM';
     }
-    var time = (hr + ':' + min + ampm).toString()
+    var time = (hr + ':' + minu + " " + ampm).toString()
     this.currentTime=time;
   }
   micOnOff() {
