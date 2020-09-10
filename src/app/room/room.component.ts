@@ -221,8 +221,11 @@ export class RoomComponent implements OnInit {
       'mouseover',
       function () {
         button.style.opacity = '1';
+<<<<<<< HEAD
         div.style.webkitBoxShadow = " 1px 0px 8px 1px #47484a"
         div.style.boxShadow = " 1px 0px 8px 1px #47484a"
+=======
+>>>>>>> a0cd13dcbc8d4291c2953e41ea976af9f70bb46c
       },
       false
     );
@@ -230,8 +233,6 @@ export class RoomComponent implements OnInit {
       'mouseout',
       function () {
         button.style.opacity = '0';
-        div.style.webkitBoxShadow = "0px 0px 0px 0px #ccc"
-        div.style.boxShadow = "0px 0px 0px 0px #ccc"
       },
       false
     );
