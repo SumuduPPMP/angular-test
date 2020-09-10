@@ -221,8 +221,8 @@ export class RoomComponent implements OnInit {
       'mouseover',
       function () {
         button.style.opacity = '1';
-        div.style.webkitBoxShadow = " 1px 0px 8px 1px #47484a"
-        div.style.boxShadow = " 1px 0px 8px 1px #47484a"
+        // div.style.webkitBoxShadow = " 1px 0px 8px 1px #47484a"
+        // div.style.boxShadow = " 1px 0px 8px 1px #47484a"
       },
       false
     );
