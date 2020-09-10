@@ -1,3 +1,4 @@
+import { async } from '@angular/core/testing';
 //import { WebSocketService } from './../web-socket.service';
 import { element } from 'protractor';
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
@@ -32,8 +33,10 @@ export class RoomComponent implements OnInit {
   newUserJoin = false;
   micOn = true;
   videoOn = true;
+  openFullScreen = true;
   TooltipMic: string;
   TooltipVideo: string;
+  TooltipFscreen : string;
   currentTime;
   myStream;
   mediaQuery;
@@ -356,6 +359,7 @@ export class RoomComponent implements OnInit {
     this.data.currentRoom.subscribe((data) => (this.roomID = data));
     this.data.mic.subscribe((data) => (this.micOn = data));
     this.data.camera.subscribe((data) => (this.videoOn = data));
+    this.TooltipFscreen = "Full screen"
     if (this.micOn) {
       this.TooltipMic = 'Turn off mic';
       audiotrack.enabled = true;
@@ -418,5 +422,28 @@ export class RoomComponent implements OnInit {
     setTimeout(() => {
       window.location.reload();
     }, 300);
+  }
+  openFullscreen(){
+    var elem = document.documentElement;
+    if(this.openFullScreen){
+      this.TooltipFscreen = 'Exit full screen'
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      }
+    }else{
+      this.TooltipFscreen = 'Full screen'
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+    this.openFullScreen = !this.openFullScreen;
+  }
+  async shareScreen(){
+    const mediaDevices = navigator.mediaDevices as any;
+    const stream = await mediaDevices.getDisplayMedia();
+    this.peersArray.find(sender => sender.track.kind === 'video').replaceTrack(stream);
+    stream.onended = function() {
+      this.peersArray.find(sender => sender.track.kind === "video").replaceTrack(this.myStream.getTracks()[1]);
+    }
   }
 }

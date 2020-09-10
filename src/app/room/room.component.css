@@ -20,6 +20,16 @@
   height: 50px;
   border-radius: 25px;
 }
+.fullscnButton{
+  position: absolute;
+  font-size: 20px;
+  right :50px;
+}
+.scnShareButton{
+  position: absolute;
+  font-size: 20px;
+  right :100px;
+}
 .usercount{
   position: absolute;
   right:30px;
