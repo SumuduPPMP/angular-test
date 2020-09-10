@@ -230,8 +230,8 @@ export class RoomComponent implements OnInit {
       'mouseout',
       function () {
         button.style.opacity = '0';
-        div.style.webkitBoxShadow = "0px 0px 0px 0px #ccc"
-        div.style.boxShadow = "0px 0px 0px 0px #ccc"
+        div.style.webkitBoxShadow = "0px 0px 0px 0px #47484a"
+        div.style.boxShadow = "0px 0px 0px 0px #47484a"
       },
       false
     );
