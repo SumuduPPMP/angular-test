@@ -22,7 +22,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   //uri: string = 'https://angular-test-video.herokuapp.com';
-  uri: string = 'ws://localhost:3000';
+  //uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -43,8 +43,8 @@ export class RoomComponent implements OnInit {
   videoStream: MediaStream;
 
   constructor(private data: DataService) {
-    this.socketRef = io(this.uri);
-    //this.socketRef = io();
+    //this.socketRef = io(this.uri);
+    this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -441,9 +441,14 @@ export class RoomComponent implements OnInit {
   async shareScreen(){
     const mediaDevices = navigator.mediaDevices as any;
     const stream = await mediaDevices.getDisplayMedia();
-    this.peersArray.find(sender => sender.track.kind === 'video').replaceTrack(stream);
-    stream.onended = function() {
-      this.peersArray.find(sender => sender.track.kind === "video").replaceTrack(this.myStream.getTracks()[1]);
-    }
+    this.myStream = stream
+
+    this.peersArray.forEach((peer) => {
+
+    });
+    // this.peersArray.find(sender => sender.track.kind === 'video').replaceTrack(stream);
+    // stream.onended = function() {
+    //   this.peersArray.find(sender => sender.track.kind === "video").replaceTrack(this.myStream.getTracks()[1]);
+    // }
   }
 }
