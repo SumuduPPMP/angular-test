@@ -40,7 +40,7 @@
   right: 0px;
   z-index: 100;
   height: 100vh;
-  margin-top:55px
+  margin-top:55px;
 }
 .user-alart{
   position: absolute;
@@ -72,6 +72,38 @@
   60% {opacity: 1;}
   100% {opacity: 0;}
 }
+   /* Small devices (landscape phones, less than 768px) */
+   @media (max-width: 767.98px) {
+    .otherVideoDiv{
+      position: relative;
+      width: 100%;
+      z-index: 100;
+      margin-top:0px;
+      margin-right:0px !important;
+    }
+    .mainVideoDiv{
+      margin-top:0px;
+      background-color: #202124d8;
+      width: 100%;
+      display: block;
+      overflow: hidden;
+    }
+
+    .timecard{
+      position: fixed;
+      background-color:#eaebec;
+      top: 0px !important;
+      right: 0px;
+      width: 100%;
+      height:50px;
+      z-index: 101;
+      border-radius: 0px !important;
+    }
+    .mobile-color{
+      background-color: #202124d8;
+    }
+
+   }
 
 
 

@@ -21,7 +21,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   //uri: string = 'https://angular-test-video.herokuapp.com';
-  //uri: string = 'ws://localhost:3000';
+  uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -36,15 +36,16 @@ export class RoomComponent implements OnInit {
   TooltipVideo: string;
   currentTime;
   myStream;
-
+  mediaQuery;
   videoStream: MediaStream;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
+    this.mediaQuery = window.matchMedia( "(max-width: 767.98px)" );
     console.log(this.roomID);
     // hardcodeed room id for development purpose
     //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
@@ -206,6 +207,9 @@ export class RoomComponent implements OnInit {
     div.className =
       'embed-responsive embed-responsive-16by9 videoDiv rounded mt-1';
     div.style.backgroundColor = '#202124';
+    if (this.mediaQuery.matches){
+       div.style.height = "100%"
+    }
     div.appendChild(video);
     div.id = this.divId.toString();
     div.onclick = function () {
@@ -280,7 +284,7 @@ export class RoomComponent implements OnInit {
           const oldMain = element.mainVideoDiv.nativeElement.firstElementChild;
           oldMain.title = 'other';
           element.mainVideoDiv.nativeElement.firstElementChild.remove();
-          element.otherVideoDiv.nativeElement.append(oldMain);
+          element.otherVideoDiv.nativeElement.append(oldMain)
           oldMain.style.backgroundColor = '#3a3b3d';
         }
         element.mainVideoDiv.nativeElement.append(btdiv.parentElement);
@@ -294,6 +298,32 @@ export class RoomComponent implements OnInit {
     button.append(i);
     btdiv.append(button);
     return btdiv;
+  }
+  fadeIn(div){
+
+    var fadeEffect = setInterval(function () {
+      if (!div.style.opacity) {
+        div.style.opacity = 0;
+      }
+      if (div.style.opacity < 1) {
+        div.style.opacity += 0.1;
+      } else {
+          clearInterval(fadeEffect);
+      }
+  }, 50);
+
+  }
+  fadeOut(div){
+    var fadeEffect = setInterval(function () {
+      if (!div.style.opacity) {
+        div.style.opacity = 1;
+      }
+      if (div.style.opacity > 0) {
+        div.style.opacity = 0.1;
+      } else {
+          clearInterval(fadeEffect);
+      }
+  }, 50);
   }
   removeUserDiv(userID) {
     this.videoDivArray.forEach((div) => {
