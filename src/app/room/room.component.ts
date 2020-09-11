@@ -441,14 +441,22 @@ export class RoomComponent implements OnInit {
   async shareScreen(){
     const mediaDevices = navigator.mediaDevices as any;
     const stream = await mediaDevices.getDisplayMedia();
-    this.myStream = stream
 
     this.peersArray.forEach((peer) => {
-
-    });
-    // this.peersArray.find(sender => sender.track.kind === 'video').replaceTrack(stream);
-    // stream.onended = function() {
-    //   this.peersArray.find(sender => sender.track.kind === "video").replaceTrack(this.myStream.getTracks()[1]);
+      console.log(peer)
+    //   this.peersArray.find(sender => sender.track === 'video').replaceTrack(stream);
+    //   stream.onended = function() {
+    //   this.peersArray.find(sender => sender.track === "video").replaceTrack(this.myStream.getTracks()[1]);
     // }
+    //peer.replaceTrack(this.myStream.getVideoTracks()[0], stream.getTracks()[0], stream)
+    peer.replaceTrack(this.myStream.getVideoTracks()[0],stream.getTracks()[0],stream);
+
+
+    // this.myStream.getVideoTracks()[0].stop()
+    // peer.replaceTrack(peer.getVideoTracks()[0], stream, peer.streams[0])
+    //peer.replaceTrack(oldTrack, newTrack, stream)
+    });
+
+
   }
 }
