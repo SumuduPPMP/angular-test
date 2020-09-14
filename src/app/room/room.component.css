@@ -112,6 +112,12 @@
     .mobile-color{
       background-color: #202124d8;
     }
+    .fullscnButton{
+      display: none;
+    }
+    .scnShareButton{
+      display: none;
+    }
 
    }
 
