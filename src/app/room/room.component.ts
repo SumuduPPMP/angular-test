@@ -64,7 +64,7 @@ export class RoomComponent implements OnInit {
     this.socketRef.on('sharescreen active', (user_id) => {
        this.screenShareId = user_id;
        this.screenShareActive=true;
-       this.removeUserDiv(user_id);
+       //this.removeUserDiv(user_id);
     });
     this.socketRef.on('sharescreen ended', (user_id) => {
        this.screenShareActive=false;
@@ -461,6 +461,7 @@ export class RoomComponent implements OnInit {
     await mediaDevices.getDisplayMedia({ video: true, audio: true })
     .then((stream) => {
       this.socketRef.emit('sharescreen active', this.socketRef.id);
+      this.peersArray.find(sender => sender.track === 'video').replaceTrack(stream);
       this.peersArray.forEach((peer) => {
         //peer.removeStream(this.myStream)
         //peer.addStream(stream)
@@ -469,7 +470,8 @@ export class RoomComponent implements OnInit {
         //peer.addTrack(stream.getVideoTracks()[0], stream)
          //peer.removeStream(this.myStream);
          //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
-         peer.addStream(stream);
+         //peer.addStream(stream);
+
 
     //    this.peersArray.find(sender => sender.track === 'video').replaceTrack(stream);
     //    stream.onended = function() {
