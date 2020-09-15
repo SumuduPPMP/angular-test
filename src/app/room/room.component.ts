@@ -470,7 +470,7 @@ export class RoomComponent implements OnInit {
          //peer.removeStream(this.myStream);
          //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
          //peer.addStream(stream);
-         peer.replaceTrack(stream);
+         peer.replaceTrack(this.myStream.getTracks()[0], stream.getTracks()[0], this.myStream);
 
     //    this.peersArray.find(sender => sender.track === 'video').replaceTrack(stream);
     //    stream.onended = function() {
