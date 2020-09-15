@@ -34,9 +34,11 @@ export class RoomComponent implements OnInit {
   micOn = true;
   videoOn = true;
   openFullScreen = true;
+  screenShareActive : boolean;
   TooltipMic: string;
   TooltipVideo: string;
   TooltipFscreen : string;
+  screenShareId : string;
   currentTime;
   myStream;
   mediaQuery;
@@ -59,6 +61,15 @@ export class RoomComponent implements OnInit {
     this.socketRef.on('anyway disconnect', (user_id) => {
       this.removeUserDiv(user_id);
     });
+    this.socketRef.on('sharescreen active', (user_id) => {
+       this.screenShareId = user_id;
+       this.screenShareActive=true;
+       this.removeUserDiv(user_id);
+    });
+    this.socketRef.on('sharescreen ended', (user_id) => {
+       this.screenShareActive=false;
+       this.removeUserDiv(user_id);
+    });
     this.socketRef.on('time', time => {
       this.getCurrentTime();
     });
@@ -75,7 +86,6 @@ export class RoomComponent implements OnInit {
         this.userCount = 1;
         this.addVideoStream(video, this.myStream);
         this.socketRef.emit('join room', this.roomID);
-
         this.socketRef.on('all users', (users) => {
           const peers = [];
           console.log('users count :' + users.length);
@@ -111,7 +121,7 @@ export class RoomComponent implements OnInit {
             peerID: payload.callerID,
             peer,
           });
-
+          console.log(payload.callerID);
           this.peersArray.push(peer);
           const video = <HTMLVideoElement>document.createElement('video');
           this.addVideoStreamForNewUser(peer, payload.callerID);
@@ -177,35 +187,41 @@ export class RoomComponent implements OnInit {
     this.createDivForTheVideo(video);
   }
   addVideoStreamForNewUser(peer, userID) {
-    peer.on('stream', (stream) => {
-      const video = document.createElement('video');
-      video.srcObject = stream;
-      video.id = userID;
-      video.addEventListener('loadedmetadata', () => {
-        video.play();
-      });
-      this.createDivForTheVideo(video);
-    });
-  }
-
-  addUsersVideoStream(peersArray) {
-    {
-      peersArray.map((peer, index) => {
-        peer.on('stream', (stream) => {
-          console.log(stream);
-          const video = document.createElement('video');
-          video.srcObject = stream;
-          video.addEventListener('loadedmetadata', () => {
-            video.play();
-          });
-          this.createDivForTheVideo(video);
+    if(userID != this.socketRef){
+      peer.on('stream', (stream) => {
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        video.id = userID;
+        video.addEventListener('loadedmetadata', () => {
+          video.play();
         });
+        this.createDivForTheVideo(video);
+        console.log(stream)
       });
     }
+
   }
+
+  // addUsersVideoStream(peersArray) {
+  //   {
+  //     peersArray.map((peer, index) => {
+  //       peer.on('stream', (stream) => {
+  //         console.log("fire");
+  //         const video = document.createElement('video');
+  //         video.srcObject = stream;
+  //         video.addEventListener('loadedmetadata', () => {
+  //           video.play();
+  //         });
+  //         this.createDivForTheVideo(video);
+  //       });
+  //     });
+  //   }
+  // }
   createDivForTheVideo(video) {
-    video.style.transform = 'rotateY(180deg)';
-    video.style.webkitTransform = 'rotateY(180deg)';
+    if(!this.screenShareActive){
+      video.style.transform = 'rotateY(180deg)';
+      video.style.webkitTransform = 'rotateY(180deg)';
+    }
     const div = <HTMLDivElement>document.createElement('div');
     div.className =
       'embed-responsive embed-responsive-16by9 videoDiv rounded mt-1';
@@ -224,7 +240,6 @@ export class RoomComponent implements OnInit {
       'mouseover',
       function () {
         button.style.opacity = '1';
-        div.style.webkitBoxShadow = " 1px 0px 8px 1px #47484a"
         div.style.boxShadow = " 1px 0px 8px 1px #47484a"
       },
       false
@@ -233,7 +248,6 @@ export class RoomComponent implements OnInit {
       'mouseout',
       function () {
         button.style.opacity = '0';
-        div.style.webkitBoxShadow = " 0px 0px 0px 0px #47484a"
         div.style.boxShadow = " 0px 0px 0px 0px #47484a"
       },
       false
@@ -243,7 +257,7 @@ export class RoomComponent implements OnInit {
       if (!this.mainVideoDiv.nativeElement.firstElementChild && div.id == 0) {
         this.mainVideoDiv.nativeElement.append(div);
         div.title = 'main';
-      } else if (div.id == 1) {
+      } else if (div.id == 1 || div.firstElementChild.id == this.screenShareId ) {
         const oldMain = this.mainVideoDiv.nativeElement.firstElementChild;
         oldMain.title = 'other';
         oldMain.style.backgroundColor = '#3a3b3d';
@@ -266,6 +280,7 @@ export class RoomComponent implements OnInit {
     this.divId++;
   }
   createVideoButton() {
+    console.log("div creating..")
     const element = this;
     const btdiv = document.createElement('div');
     btdiv.className = 'p-1';
@@ -336,6 +351,9 @@ export class RoomComponent implements OnInit {
     this.videoDivArray.forEach((div) => {
       var removeVideo = div.firstElementChild;
       if (removeVideo.id == userID) {
+        if(!this.screenShareActive){
+          this.userCount++
+        }
         this.userCount--;
         div.remove();
         const index = this.videoDivArray.indexOf(div);
@@ -442,17 +460,16 @@ export class RoomComponent implements OnInit {
     const mediaDevices = navigator.mediaDevices as any;
     await mediaDevices.getDisplayMedia({ video: true, audio: true })
     .then((stream) => {
+      this.socketRef.emit('sharescreen active', this.socketRef.id);
       this.peersArray.forEach((peer) => {
         //peer.removeStream(this.myStream)
         //peer.addStream(stream)
         //peer.destroy()
         //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
         //peer.addTrack(stream.getVideoTracks()[0], stream)
-         peer.removeStream(this.myStream);
+         //peer.removeStream(this.myStream);
+         //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
          peer.addStream(stream);
-         stream.onended = function() {
-         peer.addStream(this.myStream);
-       }
 
     //    this.peersArray.find(sender => sender.track === 'video').replaceTrack(stream);
     //    stream.onended = function() {
@@ -463,6 +480,13 @@ export class RoomComponent implements OnInit {
       // peer.replaceTrack(peer.getVideoTracks()[0], stream, peer.streams[0])
       //peer.replaceTrack(oldTrack, newTrack, stream)
       });
+      stream.getVideoTracks()[0].onended = () => {
+        this.socketRef.emit('sharescreen ended', this.socketRef.id);
+        // this.peersArray.forEach((peer) => {
+        //    peer.addStream(this.myStream);
+        // });
+      };
+
     });
 
 
