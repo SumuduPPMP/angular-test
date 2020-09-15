@@ -70,6 +70,22 @@ io.on('connection', socket => {
           users[roomID] = room;
       }
   });
+
+  socket.on('sharescreen active', user_id =>{
+    const roomID = socketToRoom[socket.id];
+      let room = users[roomID];
+      if (room) {
+        socket.broadcast.emit("sharescreen active",user_id);
+      }
+  })
+
+  socket.on('sharescreen ended', user_id =>{
+    const roomID = socketToRoom[socket.id];
+      let room = users[roomID];
+      if (room) {
+        socket.broadcast.emit("sharescreen ended",user_id);
+      }
+  })
 });
  setInterval(() => io.emit('time', new Date()), 1000);
 
