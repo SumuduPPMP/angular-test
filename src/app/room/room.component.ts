@@ -446,36 +446,36 @@ export class RoomComponent implements OnInit {
     await mediaDevices.getDisplayMedia({ video: true, audio: true })
     .then((stream) => {
       this.socketRef.emit('sharescreen active', this.socketRef.id);
-        this.usersArray.forEach((userID) => {
-          const peer = this.createPeer(
-            userID,
-            "screenShareId",
-            stream
-          );
-          peer.addStream(stream)
-          this.addVideoStreamForNewUser(peer, userID);
-        });
+        // this.usersArray.forEach((userID) => {
+        //   const peer = this.createPeer(
+        //     userID,
+        //     "screenShareId",
+        //     stream
+        //   );
+        //   peer.addStream(stream)
+        //   this.addVideoStreamForNewUser(peer, userID);
+        // });
 
-    //   this.peersArray.forEach((peer) => {
-    //     //peer.removeStream(this.myStream)
-    //     //peer.addStream(stream)
-    //     //peer.destroy()
-    //     //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
-    //     //peer.addTrack(stream.getVideoTracks()[0], stream)
-    //      //peer.removeStream(this.myStream);
-    //      //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
-    //      peer.addStream(stream);
+      this.peersArray.forEach((peer) => {
+        //peer.removeStream(this.myStream)
+        //peer.addStream(stream)
+        //peer.destroy()
+        //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
+        //peer.addTrack(stream.getVideoTracks()[0], stream)
+         //peer.removeStream(this.myStream);
+         //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
+         peer.addStream(stream);
 
 
-    // //    this.peersArray.find(sender => sender.track === 'video').replaceTrack(stream);
-    // //    stream.onended = function() {
-    // //    this.peersArray.find(sender => sender.track === "video").replaceTrack(this.myStream.getTracks()[1]);
-    // //  }
+    //    this.peersArray.find(sender => sender.track === 'video').replaceTrack(stream);
+    //    stream.onended = function() {
+    //    this.peersArray.find(sender => sender.track === "video").replaceTrack(this.myStream.getTracks()[1]);
+    //  }
 
-    //   // this.myStream.getVideoTracks()[0].stop()
-    //   // peer.replaceTrack(peer.getVideoTracks()[0], stream, peer.streams[0])
-    //   //peer.replaceTrack(oldTrack, newTrack, stream)
-    //   });
+      // this.myStream.getVideoTracks()[0].stop()
+      // peer.replaceTrack(peer.getVideoTracks()[0], stream, peer.streams[0])
+      //peer.replaceTrack(oldTrack, newTrack, stream)
+      });
       stream.getVideoTracks()[0].onended = () => {
         this.socketRef.emit('sharescreen ended', this.socketRef.id);
         // this.peersArray.forEach((peer) => {
