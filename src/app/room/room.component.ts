@@ -452,6 +452,7 @@ export class RoomComponent implements OnInit {
             "screenShareId",
             stream
           );
+          peer.addStream(stream)
           this.addVideoStreamForNewUser(peer, userID);
         });
 
