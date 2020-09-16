@@ -49,7 +49,8 @@
       <i *ngIf="!videoOn"class="fas fa-video-slash"></i>
     </button>
     <button type="button" class="btn  m-2 fullscnButton"  placement="top" ngbTooltip="{{TooltipFscreen}}" (click)="openFullscreen()">
-      <i class="fas fa-expand" [ngClass]="{'text-muted' : !openFullScreen}"></i>
+      <i *ngIf ="openFullScreen" class="fas fa-expand"></i>
+      <i *ngIf ="!openFullScreen" class="fas fa-compress"></i>
     </button>
     <button type="button" class="btn  m-2 scnShareButton"  placement="top" ngbTooltip="Share screen" (click)="shareScreen()">
       <i class="fas fa-chalkboard-teacher"></i>
