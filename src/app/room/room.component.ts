@@ -39,7 +39,6 @@ export class RoomComponent implements OnInit {
   TooltipMic: string;
   TooltipVideo: string;
   TooltipFscreen: string;
-  screenShareId: string;
   currentTime;
   myStream;
   mediaQuery;
@@ -63,7 +62,6 @@ export class RoomComponent implements OnInit {
       this.removeUserDiv(user_id);
     });
     this.socketRef.on('sharescreen active', (user_id) => {
-      this.screenShareId = user_id;
       this.screenShareActive = true;
       this.mirrorVideo(user_id)
     });
@@ -444,19 +442,22 @@ export class RoomComponent implements OnInit {
       .then((stream) => {
         this.socketRef.emit('sharescreen active', this.socketRef.id);
 
-        this.peersRef.forEach((p) => {
-          p.peer.replaceTrack(
+        this.peersArray.forEach((peer) => {
+          peer.replaceTrack(
             this.myStream.getVideoTracks()[0],
             stream.getVideoTracks()[0],
             this.myStream
           );
           stream.getVideoTracks()[0].onended = () => {
             this.socketRef.emit('sharescreen ended', this.socketRef.id);
-            p.peer.replaceTrack(
+
+            this.peersArray.forEach((peer) => {
+              peer.replaceTrack(
               stream.getVideoTracks()[0],
               this.myStream.getVideoTracks()[0],
               this.myStream
             );
+            });
           };
         });
       });
