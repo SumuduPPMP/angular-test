@@ -28,6 +28,7 @@ export class RoomComponent implements OnInit {
   peersRef: any = [];
   peersArray: any = [];
   videoDivArray: any = [];
+  usersArray: any = [];
   divId = 0;
   userCount: number;
   newUserJoin = false;
@@ -68,7 +69,7 @@ export class RoomComponent implements OnInit {
     });
     this.socketRef.on('sharescreen ended', (user_id) => {
        this.screenShareActive=false;
-       this.removeUserDiv(user_id);
+       //this.removeUserDiv(user_id);
     });
     this.socketRef.on('time', time => {
       this.getCurrentTime();
@@ -87,6 +88,7 @@ export class RoomComponent implements OnInit {
         this.addVideoStream(video, this.myStream);
         this.socketRef.emit('join room', this.roomID);
         this.socketRef.on('all users', (users) => {
+          this.usersArray =users;
           const peers = [];
           console.log('users count :' + users.length);
           this.userCount = this.userCount + users.length;
@@ -137,7 +139,6 @@ export class RoomComponent implements OnInit {
   //functions.....
 
   createPeer(userToSignal, callerID, stream) {
-    var count = 0;
     let peer = new SimplePeer({
       initiator: true,
       trickle: false,
@@ -145,36 +146,27 @@ export class RoomComponent implements OnInit {
     });
 
     peer.on('signal', (signal) => {
-      if (signal != null) {
+      console.log(signal)
         this.socketRef.emit('sending signal', {
           userToSignal,
           callerID,
           signal,
         });
-      }
-      count++;
     });
 
     return peer;
   }
 
   addPeer(incomingSignal, callerID, stream) {
-    var count = 0;
     const peer = new SimplePeer({
       initiator: false,
       trickle: false,
       stream,
     });
-
     peer.on('signal', (signal) => {
-      if (signal != null) {
         this.socketRef.emit('returning signal', { signal, callerID });
-      }
-      count++;
     });
-
     peer.signal(incomingSignal);
-
     return peer;
   }
 
@@ -187,7 +179,6 @@ export class RoomComponent implements OnInit {
     this.createDivForTheVideo(video);
   }
   addVideoStreamForNewUser(peer, userID) {
-    if(userID != this.socketRef){
       peer.on('stream', (stream) => {
         const video = document.createElement('video');
         video.srcObject = stream;
@@ -196,10 +187,7 @@ export class RoomComponent implements OnInit {
           video.play();
         });
         this.createDivForTheVideo(video);
-        console.log(stream)
       });
-    }
-
   }
 
   // addUsersVideoStream(peersArray) {
@@ -257,7 +245,7 @@ export class RoomComponent implements OnInit {
       if (!this.mainVideoDiv.nativeElement.firstElementChild && div.id == 0) {
         this.mainVideoDiv.nativeElement.append(div);
         div.title = 'main';
-      } else if (div.id == 1 || div.firstElementChild.id == this.screenShareId ) {
+      } else if (div.id == 1) {
         const oldMain = this.mainVideoDiv.nativeElement.firstElementChild;
         oldMain.title = 'other';
         oldMain.style.backgroundColor = '#3a3b3d';
@@ -351,9 +339,6 @@ export class RoomComponent implements OnInit {
     this.videoDivArray.forEach((div) => {
       var removeVideo = div.firstElementChild;
       if (removeVideo.id == userID) {
-        if(!this.screenShareActive){
-          this.userCount++
-        }
         this.userCount--;
         div.remove();
         const index = this.videoDivArray.indexOf(div);
@@ -461,26 +446,35 @@ export class RoomComponent implements OnInit {
     await mediaDevices.getDisplayMedia({ video: true, audio: true })
     .then((stream) => {
       this.socketRef.emit('sharescreen active', this.socketRef.id);
-      this.peersArray.forEach((peer) => {
-        //peer.removeStream(this.myStream)
-        //peer.addStream(stream)
-        //peer.destroy()
-        //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
-        //peer.addTrack(stream.getVideoTracks()[0], stream)
-         //peer.removeStream(this.myStream);
-         //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
-         //peer.addStream(stream);
-         peer.replaceTrack(this.myStream.getTracks()[0], stream.getTracks()[0], stream);
+        this.usersArray.forEach((userID) => {
+          const peer = this.createPeer(
+            userID,
+            "screenShareId",
+            stream
+          );
+          this.addVideoStreamForNewUser(peer, userID);
+        });
 
-    //    this.peersArray.find(sender => sender.track === 'video').replaceTrack(stream);
-    //    stream.onended = function() {
-    //    this.peersArray.find(sender => sender.track === "video").replaceTrack(this.myStream.getTracks()[1]);
-    //  }
+    //   this.peersArray.forEach((peer) => {
+    //     //peer.removeStream(this.myStream)
+    //     //peer.addStream(stream)
+    //     //peer.destroy()
+    //     //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
+    //     //peer.addTrack(stream.getVideoTracks()[0], stream)
+    //      //peer.removeStream(this.myStream);
+    //      //peer.removeTrack(this.myStream.getVideoTracks()[0], this.myStream)
+    //      peer.addStream(stream);
 
-      // this.myStream.getVideoTracks()[0].stop()
-      // peer.replaceTrack(peer.getVideoTracks()[0], stream, peer.streams[0])
-      //peer.replaceTrack(oldTrack, newTrack, stream)
-      });
+
+    // //    this.peersArray.find(sender => sender.track === 'video').replaceTrack(stream);
+    // //    stream.onended = function() {
+    // //    this.peersArray.find(sender => sender.track === "video").replaceTrack(this.myStream.getTracks()[1]);
+    // //  }
+
+    //   // this.myStream.getVideoTracks()[0].stop()
+    //   // peer.replaceTrack(peer.getVideoTracks()[0], stream, peer.streams[0])
+    //   //peer.replaceTrack(oldTrack, newTrack, stream)
+    //   });
       stream.getVideoTracks()[0].onended = () => {
         this.socketRef.emit('sharescreen ended', this.socketRef.id);
         // this.peersArray.forEach((peer) => {
