@@ -30,6 +30,14 @@
   font-size: 20px;
   right :100px;
 }
+.sharecnInfo{
+  position: absolute;
+  right :250px;
+}
+.shareScnMenu{
+  position: relative;
+  left:55PX
+}
 .usercount{
   position: absolute;
   right:30px;
@@ -118,7 +126,27 @@
     .scnShareButton{
       display: none;
     }
+    .sharecnInfo{
+      display: none;
+    }
 
+   }
+
+   @media (min-width: 768px) and (max-width: 991.98px) {
+    .sharecnInfo{
+      position: absolute;
+      right :155px;
+      font-size: 14px;
+
+    }
+    }
+
+   @media (min-width: 1500px) {
+    .sharecnInfo{
+      position: absolute;
+      right :300px;
+      width: 300px;
+    }
    }
 
 

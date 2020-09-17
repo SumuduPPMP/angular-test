@@ -63,11 +63,11 @@ export class RoomComponent implements OnInit {
     });
     this.socketRef.on('sharescreen active', (user_id) => {
       this.screenShareActive = true;
-      this.mirrorVideo(user_id)
+      this.mirrorAndFullScreenVideo(user_id)
     });
     this.socketRef.on('sharescreen ended', (user_id) => {
       this.screenShareActive = false;
-      this.mirrorVideo(user_id)
+      this.mirrorAndFullScreenVideo(user_id)
     });
     this.socketRef.on('time', (time) => {
       this.getCurrentTime();
@@ -462,18 +462,34 @@ export class RoomComponent implements OnInit {
         });
       });
   }
-  mirrorVideo(peerID){
+  mirrorAndFullScreenVideo(peerID){
     this.videoDivArray.forEach((div) => {
       var mirrorVideo = div.firstElementChild;
       if (mirrorVideo.id == peerID) {
         if(this.screenShareActive){
           mirrorVideo.style.transform = 'rotateY(0deg)';
           mirrorVideo.style.webkitTransform = 'rotateY(0deg)';
+          if(div.title =='other' && this.mainVideoDiv.nativeElement.firstElementChild){
+            const oldMain = this.mainVideoDiv.nativeElement.firstElementChild;
+            oldMain.title = 'other';
+            this.mainVideoDiv.nativeElement.firstElementChild.remove();
+            this.otherVideoDiv.nativeElement.append(oldMain);
+            oldMain.style.backgroundColor = '#3a3b3d';
+
+            const oldOther = div;
+            oldOther.title = 'main';
+            div.remove();
+            this.mainVideoDiv.nativeElement.append(oldOther);
+            oldOther.style.backgroundColor = '#202124';
+
+            if (mirrorVideo.requestFullscreen) {
+              mirrorVideo.requestFullscreen();
+            }
+          }
         }else{
           mirrorVideo.style.transform = 'rotateY(180deg)';
           mirrorVideo.style.webkitTransform = 'rotateY(180deg)';
         }
-
       }
     });
   }
