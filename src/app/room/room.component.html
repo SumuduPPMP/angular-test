@@ -1,6 +1,4 @@
-
-
-  <!-- <div #container id="child" class="body" [ngClass]="{'d-flex justify-content-center': (userCount == 0 && newUserJoin==false),
+<!-- <div #container id="child" class="body" [ngClass]="{'d-flex justify-content-center': (userCount == 0 && newUserJoin==false),
  'padiingfirst':(userCount == 0 && newUserJoin==false)}" >
 
 
@@ -22,46 +20,106 @@
   </button>
 </div> -->
 
-
 <div #mainContainer class="container-fluid bg-light mobile-color">
-  <div class="row ">
-    <div class="user-alart text-center"><div class="btn btn-info ">Welcome To PPMP Meet</div></div>
-    <div class="timecard rounded border border-secondary d-flex justify-content-center align-items-center">
+  <div class="row">
+    <div class="user-alart text-center">
+      <div class="btn btn-info">Welcome To PPMP Meet</div>
+    </div>
+    <div
+      class="timecard rounded border border-secondary d-flex justify-content-center align-items-center"
+    >
       <div class="d-flex align-items-center m-2 videoBtns">
         <i class="fas fa-users mr-1"></i>
-        <p style="font-size:medium">{{userCount}}</p>
+        <p style="font-size: medium">{{ userCount }}</p>
       </div>
-      <h4>{{currentTime}}</h4></div>
-    <div #mainVideoDiv class="col-md-12 mainVideoDiv d-flex align-items-center"></div>
+      <h4>{{ currentTime }}</h4>
+    </div>
+    <div
+      #mainVideoDiv
+      class="col-md-12 mainVideoDiv d-flex align-items-center"
+    ></div>
     <div #otherVideoDiv class="otherVideoDiv mr-1"></div>
   </div>
 
-  <div #footer class="footer-bar border d-flex justify-content-center align-items-center">
-    <button type="button" class="btn btn-outline-dark m-2 videoBtns"  placement="top" ngbTooltip="{{TooltipMic}}" (click)="micOnOff()">
+  <div
+    #footer
+    class="footer-bar border d-flex justify-content-center align-items-center"
+  >
+    <button
+      type="button"
+      class="btn btn-outline-dark m-2 videoBtns"
+      placement="top"
+      ngbTooltip="{{ TooltipMic }}"
+      (click)="micOnOff()"
+    >
       <i *ngIf="micOn" class="fas fa-microphone"></i>
       <i *ngIf="!micOn" class="fas fa-microphone-slash"></i>
     </button>
-    <button type="button" class="btn btn-outline-danger m-2 videoBtns"  placement="top" ngbTooltip="Leave Call" routerLink="/leaveroom" (click)="endCall()">
+    <button
+      type="button"
+      class="btn btn-outline-danger m-2 videoBtns"
+      placement="top"
+      ngbTooltip="Leave Call"
+      routerLink="/leaveroom"
+      (click)="endCall()"
+    >
       <i class="fa fa-phone"></i>
     </button>
-    <button type="button" class="btn btn-outline-dark m-2 videoBtns"  placement="top" ngbTooltip="{{TooltipVideo}}" (click)="videoOnOff()">
+    <button
+      type="button"
+      class="btn btn-outline-dark m-2 videoBtns"
+      placement="top"
+      ngbTooltip="{{ TooltipVideo }}"
+      (click)="videoOnOff()"
+    >
       <i *ngIf="videoOn" class="fas fa-video"></i>
-      <i *ngIf="!videoOn"class="fas fa-video-slash"></i>
+      <i *ngIf="!videoOn" class="fas fa-video-slash"></i>
     </button>
-    <!-- <button type="button" class="btn btn-info sharecnInfo">
-      Sharing screen <i class="fa fa-ellipsis-v shareScnMenu"></i>
-    </button> -->
-    <button type="button" class="btn  m-2 fullscnButton"  placement="top" ngbTooltip="{{TooltipFscreen}}" (click)="openFullscreen()">
-      <i *ngIf ="openFullScreen" class="fas fa-expand"></i>
-      <i *ngIf ="!openFullScreen" class="fas fa-compress"></i>
+    <button *ngIf="screenShareActive"
+      type="button"
+      class="btn btn-info sharecnoptions"
+      placement="top"
+      [ngbPopover]="shareScreenOption"
+      popoverTitle="Share screen options"
+    >
+      A user sharing screen <i class="fa fa-ellipsis-v shareScnMenu"></i>
     </button>
-    <button type="button" class="btn  m-2 scnShareButton"  placement="top" ngbTooltip="Share screen" (click)="shareScreen()">
+    <ng-template #shareScreenOption>
+      <div style="width: 200px">
+        <button
+          class="btn btn-outline-info d-flex align-items-center"
+          style="width: 200px" (click)="videoFullscreen()"
+        >
+          <i class="fas fa-expand btnIcon"></i>
+          <span class="ml-4">Full screen</span>
+        </button>
+        <button
+          class="btn btn-outline-info mt-1 d-flex align-items-center"
+          style="width: 200px " (click)="pictureInPicture()"
+        >
+          <i class="far fa-images btnIcon"></i>
+          <span class="ml-3">Picture in picture</span>
+        </button>
+      </div>
+    </ng-template>
+    <button
+      type="button"
+      class="btn m-2 fullscnButton"
+      placement="top"
+      ngbTooltip="{{ TooltipFscreen }}"
+      (click)="openFullscreen()"
+    >
+      <i *ngIf="openFullScreen" class="fas fa-expand"></i>
+      <i *ngIf="!openFullScreen" class="fas fa-compress"></i>
+    </button>
+    <button
+      type="button"
+      class="btn m-2 scnShareButton"
+      placement="top"
+      ngbTooltip="Share screen"
+      (click)="shareScreen()"
+    >
       <i class="fas fa-chalkboard-teacher"></i>
     </button>
   </div>
-
 </div>
-
-
-
-

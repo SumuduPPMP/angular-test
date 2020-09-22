@@ -22,7 +22,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   //uri: string = 'https://angular-test-video.herokuapp.com';
-  //uri: string = 'ws://localhost:3000';
+  uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -36,6 +36,7 @@ export class RoomComponent implements OnInit {
   videoOn = true;
   openFullScreen = true;
   screenShareActive: boolean;
+  shareScreenId : string;
   TooltipMic: string;
   TooltipVideo: string;
   TooltipFscreen: string;
@@ -45,8 +46,8 @@ export class RoomComponent implements OnInit {
   videoStream: MediaStream;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -63,7 +64,8 @@ export class RoomComponent implements OnInit {
     });
     this.socketRef.on('sharescreen active', (user_id) => {
       this.screenShareActive = true;
-      this.mirrorAndFullScreenVideo(user_id)
+      this.shareScreenId = user_id;
+      this.mirrorAndFullScreenVideo(this.shareScreenId )
     });
     this.socketRef.on('sharescreen ended', (user_id) => {
       this.screenShareActive = false;
@@ -434,6 +436,35 @@ export class RoomComponent implements OnInit {
       }
     }
     this.openFullScreen = !this.openFullScreen;
+  }
+  videoFullscreen(){
+    this.videoDivArray.forEach((div) => {
+      var video = div.firstElementChild;
+      if (video.id == this.shareScreenId) {
+        if (video.requestFullscreen) {
+          video.requestFullscreen();
+        }
+      }
+    });
+  }
+  pictureInPicture(){
+    this.videoDivArray.forEach((div) => {
+      var video = div.firstElementChild;
+      if (video.id == this.shareScreenId) {
+        if (!video.pictureInPictureElement) {
+          video.requestPictureInPicture()
+          .catch(error => {
+            // Video failed to enter Picture-in-Picture mode.
+          });
+        }else {
+          video.exitPictureInPicture()
+          .catch(error => {
+            // Video failed to leave Picture-in-Picture mode.
+          });
+        }
+      }
+    });
+
   }
   async shareScreen() {
     const mediaDevices = navigator.mediaDevices as any;
