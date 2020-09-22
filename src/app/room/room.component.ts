@@ -84,6 +84,7 @@ export class RoomComponent implements OnInit {
         //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
         const video = <HTMLVideoElement>document.createElement('video');
         video.muted = true;
+        video.style.pointerEvents ="none"
         this.userCount = 1;
         this.addVideoStream(video, this.myStream);
         this.socketRef.emit('join room', this.roomID);
@@ -182,6 +183,7 @@ export class RoomComponent implements OnInit {
     peer.on('stream', (stream) => {
       const video = document.createElement('video');
       video.srcObject = stream;
+      video.style.pointerEvents ="none"
       video.id = userID;
       video.addEventListener('loadedmetadata', () => {
         video.play();
