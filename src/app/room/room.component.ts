@@ -35,13 +35,14 @@ export class RoomComponent implements OnInit {
   micOn = true;
   videoOn = true;
   openFullScreen = true;
+  cameraAvailable: boolean;
   screenShareActive: boolean;
-  shareScreenId : string;
+  shareScreenId: string;
   TooltipMic: string;
   TooltipVideo: string;
   TooltipFscreen: string;
   currentTime;
-  myStream;
+  myStream :MediaStream;
   mediaQuery;
   videoStream: MediaStream;
 
@@ -65,11 +66,11 @@ export class RoomComponent implements OnInit {
     this.socketRef.on('sharescreen active', (user_id) => {
       this.screenShareActive = true;
       this.shareScreenId = user_id;
-      this.mirrorAndFullScreenVideo(this.shareScreenId )
+      this.mirrorAndFullScreenVideo(this.shareScreenId);
     });
     this.socketRef.on('sharescreen ended', (user_id) => {
       this.screenShareActive = false;
-      this.mirrorAndFullScreenVideo(user_id)
+      this.mirrorAndFullScreenVideo(user_id);
     });
     this.socketRef.on('time', (time) => {
       this.getCurrentTime();
@@ -78,13 +79,24 @@ export class RoomComponent implements OnInit {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
+        this.cameraAvailable =true;
         this.myStream = stream;
-        this.setRoomIdAndStates();
-        // hardcodeed room id for development purpose
-        //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
+        this.coreFunction()
+      })
+      .catch(err => {
+        this.cameraAvailable =false;
+        console.log("no camera")
+        this.coreFunction()
+      });
+  }
+
+  //functions.....
+  coreFunction(){
+
+        this.setRoomIdAndStates(this.cameraAvailable);
         const video = <HTMLVideoElement>document.createElement('video');
         video.muted = true;
-        video.style.pointerEvents ="none"
+        video.style.pointerEvents = 'none';
         this.userCount = 1;
         this.addVideoStream(video, this.myStream);
         this.socketRef.emit('join room', this.roomID);
@@ -134,10 +146,7 @@ export class RoomComponent implements OnInit {
           const item = this.peersRef.find((p) => p.peerID === payload.id);
           item.peer.signal(payload.signal);
         });
-      });
   }
-
-  //functions.....
 
   createPeer(userToSignal, callerID, stream) {
     let peer = new SimplePeer({
@@ -172,18 +181,19 @@ export class RoomComponent implements OnInit {
   }
 
   addVideoStream(video: HTMLVideoElement, stream: MediaStream) {
+    if(this.cameraAvailable){
     video.srcObject = stream;
     video.addEventListener('loadedmetadata', () => {
       video.play();
     });
-
+  }
     this.createDivForTheVideo(video);
   }
   addVideoStreamForNewUser(peer, userID) {
     peer.on('stream', (stream) => {
       const video = document.createElement('video');
       video.srcObject = stream;
-      video.style.pointerEvents ="none"
+      video.style.pointerEvents = 'none';
       video.id = userID;
       video.addEventListener('loadedmetadata', () => {
         video.play();
@@ -353,8 +363,9 @@ export class RoomComponent implements OnInit {
       }
     });
   }
-  setRoomIdAndStates() {
+  setRoomIdAndStates(isCamera) {
     // get the room information
+    if(isCamera){
     var audiotrack = this.myStream.getAudioTracks()[0];
     var videotrack = this.myStream.getVideoTracks()[0];
     this.data.currentRoom.subscribe((data) => (this.roomID = data));
@@ -375,6 +386,7 @@ export class RoomComponent implements OnInit {
       this.TooltipVideo = 'Turn on camera';
       videotrack.enabled = false;
     }
+  }
   }
   getCurrentTime() {
     var date = new Date();
@@ -439,7 +451,7 @@ export class RoomComponent implements OnInit {
     }
     this.openFullScreen = !this.openFullScreen;
   }
-  videoFullscreen(){
+  videoFullscreen() {
     this.videoDivArray.forEach((div) => {
       var video = div.firstElementChild;
       if (video.id == this.shareScreenId) {
@@ -449,24 +461,21 @@ export class RoomComponent implements OnInit {
       }
     });
   }
-  pictureInPicture(){
+  pictureInPicture() {
     this.videoDivArray.forEach((div) => {
       var video = div.firstElementChild;
       if (video.id == this.shareScreenId) {
         if (!video.pictureInPictureElement) {
-          video.requestPictureInPicture()
-          .catch(error => {
+          video.requestPictureInPicture().catch((error) => {
             // Video failed to enter Picture-in-Picture mode.
           });
-        }else {
-          video.exitPictureInPicture()
-          .catch(error => {
+        } else {
+          video.exitPictureInPicture().catch((error) => {
             // Video failed to leave Picture-in-Picture mode.
           });
         }
       }
     });
-
   }
   async shareScreen() {
     const mediaDevices = navigator.mediaDevices as any;
@@ -486,23 +495,26 @@ export class RoomComponent implements OnInit {
 
             this.peersArray.forEach((peer) => {
               peer.replaceTrack(
-              stream.getVideoTracks()[0],
-              this.myStream.getVideoTracks()[0],
-              this.myStream
-            );
+                stream.getVideoTracks()[0],
+                this.myStream.getVideoTracks()[0],
+                this.myStream
+              );
             });
           };
         });
       });
   }
-  mirrorAndFullScreenVideo(peerID){
+  mirrorAndFullScreenVideo(peerID) {
     this.videoDivArray.forEach((div) => {
       var mirrorVideo = div.firstElementChild;
       if (mirrorVideo.id == peerID) {
-        if(this.screenShareActive){
+        if (this.screenShareActive) {
           mirrorVideo.style.transform = 'rotateY(0deg)';
           mirrorVideo.style.webkitTransform = 'rotateY(0deg)';
-          if(div.title =='other' && this.mainVideoDiv.nativeElement.firstElementChild){
+          if (
+            div.title == 'other' &&
+            this.mainVideoDiv.nativeElement.firstElementChild
+          ) {
             const oldMain = this.mainVideoDiv.nativeElement.firstElementChild;
             oldMain.title = 'other';
             this.mainVideoDiv.nativeElement.firstElementChild.remove();
@@ -519,7 +531,7 @@ export class RoomComponent implements OnInit {
               mirrorVideo.requestFullscreen();
             }
           }
-        }else{
+        } else {
           mirrorVideo.style.transform = 'rotateY(180deg)';
           mirrorVideo.style.webkitTransform = 'rotateY(180deg)';
         }
