@@ -84,10 +84,13 @@ export class RoomComponent implements OnInit {
         this.coreFunction(stream);
       })
       .catch((err) => {
+        navigator.mediaDevices
+      .getUserMedia({ video: false, audio: true })
+      .then((stream) => {
         this.cameraAvailable = false;
-        console.log('no camera');
-        const stream = new MediaStream();
-        //this.coreFunction(stream);
+        this.coreFunction(stream);
+        console.log(stream)
+      })
       });
   }
 
@@ -173,12 +176,10 @@ export class RoomComponent implements OnInit {
   }
 
   addVideoStream(video: HTMLVideoElement, stream: MediaStream) {
-    if (this.cameraAvailable) {
       video.srcObject = stream;
       video.addEventListener('loadedmetadata', () => {
         video.play();
       });
-    }
     this.createDivForTheVideo(video);
   }
   addVideoStreamForNewUser(peer, userID) {
