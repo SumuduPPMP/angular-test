@@ -43,6 +43,9 @@ export class CreateroomComponent implements OnInit {
       .then((stream) => {
         this.myStream = stream;
         this.addmyVideoStream(myVideo, stream);
+      })
+      .catch((err) => {
+        console.log(err)
       });
   }
   addmyVideoStream(video, stream) {
