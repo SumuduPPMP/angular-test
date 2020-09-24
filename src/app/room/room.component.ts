@@ -5,6 +5,7 @@ import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import * as io from 'socket.io-client';
 import * as SimplePeer from 'simple-peer';
 import { DataService } from './../data.service';
+import { createBrotliDecompress } from 'zlib';
 
 @Component({
   selector: 'app-room',
@@ -22,7 +23,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   //uri: string = 'https://angular-test-video.herokuapp.com';
-  //uri: string = 'ws://localhost:3000';
+  uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -42,13 +43,13 @@ export class RoomComponent implements OnInit {
   TooltipVideo: string;
   TooltipFscreen: string;
   currentTime;
-  myStream :MediaStream;
+  myStream: MediaStream;
   mediaQuery;
   videoStream: MediaStream;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -79,73 +80,65 @@ export class RoomComponent implements OnInit {
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
-        this.cameraAvailable =true;
-        this.coreFunction(stream)
+        this.cameraAvailable = true;
+        this.coreFunction(stream);
       })
-      .catch(err => {
-        this.cameraAvailable =false;
-        console.log("no camera")
-        this.coreFunction(new MediaStream())
+      .catch((err) => {
+        this.cameraAvailable = false;
+        console.log('no camera');
+        const stream = new MediaStream();
+        this.coreFunction(stream);
       });
   }
 
   //functions.....
-  coreFunction(stream){
+  coreFunction(stream) {
     this.myStream = stream;
-    console.log(stream)
-        this.setRoomIdAndStates(this.cameraAvailable);
-        const video = <HTMLVideoElement>document.createElement('video');
-        video.muted = true;
-        video.style.pointerEvents = 'none';
-        this.userCount = 1;
-        this.addVideoStream(video, this.myStream);
-        this.socketRef.emit('join room', this.roomID);
-        this.socketRef.on('all users', (users) => {
-          this.usersArray = users;
-          const peers = [];
-          console.log('users count :' + users.length);
-          this.userCount = this.userCount + users.length;
-          users.forEach((userID) => {
-            console.log('user id=' + userID);
-            console.log('my id=' + this.socketRef.id);
-            const peer = this.createPeer(
-              userID,
-              this.socketRef.id,
-              this.myStream
-            );
-            this.peersRef.push({
-              peerID: userID,
-              peer,
-            });
-            peers.push(peer);
-            this.addVideoStreamForNewUser(peer, userID);
-          });
-          this.peersArray = peers;
+    console.log(stream);
+    this.setRoomIdAndStates(this.cameraAvailable);
+    const video = <HTMLVideoElement>document.createElement('video');
+    video.muted = true;
+    video.style.pointerEvents = 'none';
+    this.userCount = 1;
+    this.addVideoStream(video, this.myStream);
+    this.socketRef.emit('join room', this.roomID);
+    this.socketRef.on('all users', (users) => {
+      this.usersArray = users;
+      const peers = [];
+      this.userCount = this.userCount + users.length;
+      users.forEach((userID) => {
+        const peer = this.createPeer(userID, this.socketRef.id, this.myStream);
+        this.peersRef.push({
+          peerID: userID,
+          peer,
         });
+        peers.push(peer);
+        this.addVideoStreamForNewUser(peer, userID);
+      });
+      this.peersArray = peers;
+    });
 
-        this.socketRef.on('user joined', (payload) => {
-          this.newUserJoin = true;
-          console.log('user joined');
-          this.userCount++;
-          const peer = this.addPeer(
-            payload.signal,
-            payload.callerID,
-            this.myStream
-          );
-          this.peersRef.push({
-            peerID: payload.callerID,
-            peer,
-          });
-          console.log(payload.callerID);
-          this.peersArray.push(peer);
-          const video = <HTMLVideoElement>document.createElement('video');
-          this.addVideoStreamForNewUser(peer, payload.callerID);
-        });
+    this.socketRef.on('user joined', (payload) => {
+      this.newUserJoin = true;
+      this.userCount++;
+      const peer = this.addPeer(
+        payload.signal,
+        payload.callerID,
+        this.myStream
+      );
+      this.peersRef.push({
+        peerID: payload.callerID,
+        peer,
+      });
+      this.peersArray.push(peer);
+      const video = <HTMLVideoElement>document.createElement('video');
+      this.addVideoStreamForNewUser(peer, payload.callerID);
+    });
 
-        this.socketRef.on('receiving returned signal', (payload) => {
-          const item = this.peersRef.find((p) => p.peerID === payload.id);
-          item.peer.signal(payload.signal);
-        });
+    this.socketRef.on('receiving returned signal', (payload) => {
+      const item = this.peersRef.find((p) => p.peerID === payload.id);
+      item.peer.signal(payload.signal);
+    });
   }
 
   createPeer(userToSignal, callerID, stream) {
@@ -156,7 +149,6 @@ export class RoomComponent implements OnInit {
     });
 
     peer.on('signal', (signal) => {
-      console.log(signal);
       this.socketRef.emit('sending signal', {
         userToSignal,
         callerID,
@@ -181,15 +173,16 @@ export class RoomComponent implements OnInit {
   }
 
   addVideoStream(video: HTMLVideoElement, stream: MediaStream) {
-    if(this.cameraAvailable){
-    video.srcObject = stream;
-    video.addEventListener('loadedmetadata', () => {
-      video.play();
-    });
-  }
+    if (this.cameraAvailable) {
+      video.srcObject = stream;
+      video.addEventListener('loadedmetadata', () => {
+        video.play();
+      });
+    }
     this.createDivForTheVideo(video);
   }
   addVideoStreamForNewUser(peer, userID) {
+    console.log(userID)
     peer.on('stream', (stream) => {
       const video = document.createElement('video');
       video.srcObject = stream;
@@ -200,23 +193,18 @@ export class RoomComponent implements OnInit {
       });
       this.createDivForTheVideo(video);
     });
+    var that = this;
+  //setTimeout(function () {
+      that.createDivForNoCameraMode(userID);
+    //}, 2000);
   }
-
-  // addUsersVideoStream(peersArray) {
-  //   {
-  //     peersArray.map((peer, index) => {
-  //       peer.on('stream', (stream) => {
-  //         console.log("fire");
-  //         const video = document.createElement('video');
-  //         video.srcObject = stream;
-  //         video.addEventListener('loadedmetadata', () => {
-  //           video.play();
-  //         });
-  //         this.createDivForTheVideo(video);
-  //       });
-  //     });
-  //   }
-  // }
+  createDivForNoCameraMode(userID) {
+    if(this.myStream.active){
+        const div = <HTMLDivElement>document.createElement('div');
+        div.id = userID;
+        this.createDivForTheVideo(div);
+  }
+  }
   createDivForTheVideo(video) {
     video.style.transform = 'rotateY(180deg)';
     video.style.webkitTransform = 'rotateY(180deg)';
@@ -229,9 +217,7 @@ export class RoomComponent implements OnInit {
     }
     div.appendChild(video);
     div.id = this.divId.toString();
-    div.onclick = function () {
-      console.log();
-    };
+    div.onclick = function () {};
     const button = this.createVideoButton();
     div.appendChild(button);
     div.addEventListener(
@@ -278,7 +264,6 @@ export class RoomComponent implements OnInit {
     this.divId++;
   }
   createVideoButton() {
-    console.log('div creating..');
     const element = this;
     const btdiv = document.createElement('div');
     btdiv.className = 'p-1';
@@ -295,7 +280,6 @@ export class RoomComponent implements OnInit {
     button.style.height = '25px';
     button.style.borderRadius = '12.5px';
     button.onclick = function () {
-      console.log(element.videoDivArray.length);
       if (
         btdiv.parentElement.title == 'other' &&
         element.videoDivArray.length > 1
@@ -365,28 +349,29 @@ export class RoomComponent implements OnInit {
   }
   setRoomIdAndStates(isCamera) {
     // get the room information
-    if(isCamera){
-    var audiotrack = this.myStream.getAudioTracks()[0];
-    var videotrack = this.myStream.getVideoTracks()[0];
     this.data.currentRoom.subscribe((data) => (this.roomID = data));
     this.data.mic.subscribe((data) => (this.micOn = data));
     this.data.camera.subscribe((data) => (this.videoOn = data));
-    this.TooltipFscreen = 'Full screen';
-    if (this.micOn) {
-      this.TooltipMic = 'Turn off mic';
-      audiotrack.enabled = true;
-    } else {
-      this.TooltipMic = 'Turn on mic';
-      audiotrack.enabled = false;
+    if (isCamera) {
+      var audiotrack = this.myStream.getAudioTracks()[0];
+      var videotrack = this.myStream.getVideoTracks()[0];
+
+      this.TooltipFscreen = 'Full screen';
+      if (this.micOn) {
+        this.TooltipMic = 'Turn off mic';
+        audiotrack.enabled = true;
+      } else {
+        this.TooltipMic = 'Turn on mic';
+        audiotrack.enabled = false;
+      }
+      if (this.videoOn) {
+        this.TooltipVideo = 'Turn off camera';
+        videotrack.enabled = true;
+      } else {
+        this.TooltipVideo = 'Turn on camera';
+        videotrack.enabled = false;
+      }
     }
-    if (this.videoOn) {
-      this.TooltipVideo = 'Turn off camera';
-      videotrack.enabled = true;
-    } else {
-      this.TooltipVideo = 'Turn on camera';
-      videotrack.enabled = false;
-    }
-  }
   }
   getCurrentTime() {
     var date = new Date();
