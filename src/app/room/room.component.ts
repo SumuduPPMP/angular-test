@@ -23,7 +23,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   //uri: string = 'https://angular-test-video.herokuapp.com';
-  uri: string = 'ws://localhost:3000';
+  //uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -48,8 +48,8 @@ export class RoomComponent implements OnInit {
   videoStream: MediaStream;
 
   constructor(private data: DataService) {
-    this.socketRef = io(this.uri);
-    //this.socketRef = io();
+    //this.socketRef = io(this.uri);
+    this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -87,7 +87,7 @@ export class RoomComponent implements OnInit {
         this.cameraAvailable = false;
         console.log('no camera');
         const stream = new MediaStream();
-        this.coreFunction(stream);
+        //this.coreFunction(stream);
       });
   }
 
@@ -182,7 +182,6 @@ export class RoomComponent implements OnInit {
     this.createDivForTheVideo(video);
   }
   addVideoStreamForNewUser(peer, userID) {
-    console.log(userID)
     peer.on('stream', (stream) => {
       const video = document.createElement('video');
       video.srcObject = stream;
@@ -193,18 +192,18 @@ export class RoomComponent implements OnInit {
       });
       this.createDivForTheVideo(video);
     });
-    var that = this;
+   // var that = this;
   //setTimeout(function () {
-      that.createDivForNoCameraMode(userID);
+      //that.createDivForNoCameraMode(userID);
     //}, 2000);
   }
-  createDivForNoCameraMode(userID) {
-    if(this.myStream.active){
-        const div = <HTMLDivElement>document.createElement('div');
-        div.id = userID;
-        this.createDivForTheVideo(div);
-  }
-  }
+  // createDivForNoCameraMode(userID) {
+  //   if(this.myStream.active){
+  //       const div = <HTMLDivElement>document.createElement('div');
+  //       div.id = userID;
+  //       this.createDivForTheVideo(div);
+  // }
+  // }
   createDivForTheVideo(video) {
     video.style.transform = 'rotateY(180deg)';
     video.style.webkitTransform = 'rotateY(180deg)';
