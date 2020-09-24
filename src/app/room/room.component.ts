@@ -80,19 +80,19 @@ export class RoomComponent implements OnInit {
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         this.cameraAvailable =true;
-        this.myStream = stream;
-        this.coreFunction()
+        this.coreFunction(stream)
       })
       .catch(err => {
         this.cameraAvailable =false;
         console.log("no camera")
-        this.coreFunction()
+        this.coreFunction(new MediaStream())
       });
   }
 
   //functions.....
-  coreFunction(){
-
+  coreFunction(stream){
+    this.myStream = stream;
+    console.log(stream)
         this.setRoomIdAndStates(this.cameraAvailable);
         const video = <HTMLVideoElement>document.createElement('video');
         video.muted = true;
