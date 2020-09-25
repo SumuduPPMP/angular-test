@@ -194,9 +194,9 @@ export class RoomComponent implements OnInit {
   }
   addVideoStreamForNewUser(peer, userID) {
     peer.on('stream', (stream) => {
-      if (!stream.getVideoTracks()[0]) {
-        this.createDivforNoCamera(userID, stream);
-      } else {
+     // if (!stream.getVideoTracks()[0]) {
+     //   this.createDivforNoCamera(userID, stream);
+     // } else {
         const video = document.createElement('video');
         video.srcObject = stream;
         video.style.pointerEvents = 'none';
@@ -205,7 +205,7 @@ export class RoomComponent implements OnInit {
           video.play();
         });
         this.createDivForTheVideo(video);
-      }
+     // }
     });
   }
   createDivforNoCamera(userID, stream) {
