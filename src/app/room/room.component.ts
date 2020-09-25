@@ -194,7 +194,7 @@ export class RoomComponent implements OnInit {
   }
   addVideoStreamForNewUser(peer, userID) {
     peer.on('stream', (stream) => {
-      if (!stream.getVideoTracks()[0]) {
+      if (!stream.getVideoTracks()) {
         this.createDivforNoCamera(userID, stream);
       } else {
 
@@ -219,14 +219,14 @@ export class RoomComponent implements OnInit {
     icon.className = ' fas fa-user-alt text-muted';
     icon.style.fontSize = '350%';
 
-    // const video = document.createElement('video');
-    // video.srcObject = stream;
-    // video.style.pointerEvents = 'none';
-    // video.id = userID;
-    // video.addEventListener('loadedmetadata', () => {
-    //   video.play();
-    // });
-    // div.appendChild(video);
+    const video = document.createElement('video');
+    video.srcObject = stream;
+    video.style.pointerEvents = 'none';
+    video.id = userID;
+    video.addEventListener('loadedmetadata', () => {
+      video.play();
+    });
+    div.appendChild(video);
     div.appendChild(icon);
     div.id = userID;
     this.createDivForTheVideo(div);
