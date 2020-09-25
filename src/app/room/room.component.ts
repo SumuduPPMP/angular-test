@@ -85,19 +85,17 @@ export class RoomComponent implements OnInit {
       })
       .catch((err) => {
         navigator.mediaDevices
-      .getUserMedia({ video: false, audio: true })
-      .then((stream) => {
-        this.cameraAvailable = false;
-        this.coreFunction(stream);
-        console.log(stream)
-      })
+          .getUserMedia({ video: false, audio: true })
+          .then((stream) => {
+            this.cameraAvailable = false;
+            this.coreFunction(stream);
+          });
       });
   }
 
   //functions.....
   coreFunction(stream) {
     this.myStream = stream;
-    console.log(stream);
     this.setRoomIdAndStates(this.cameraAvailable);
     const video = <HTMLVideoElement>document.createElement('video');
     video.muted = true;
@@ -176,41 +174,68 @@ export class RoomComponent implements OnInit {
   }
 
   addVideoStream(video: HTMLVideoElement, stream: MediaStream) {
+    if (!this.myStream.getVideoTracks()[0]) {
+      const div = <HTMLDivElement>document.createElement('div');
+      div.className = 'd-flex justify-content-center';
+      div.style.height = '100%';
+      div.style.width = '100%';
+      const icon = document.createElement('i');
+      icon.className = ' fas fa-user-alt text-muted';
+      icon.style.fontSize = '350%';
+      div.appendChild(icon);
+      this.createDivForTheVideo(div);
+    } else {
       video.srcObject = stream;
-      video.addEventListener('loadedmetadata', () => {
-        video.play();
-      });
-    this.createDivForTheVideo(video);
-  }
-  addVideoStreamForNewUser(peer, userID) {
-    peer.on('stream', (stream) => {
-      const video = document.createElement('video');
-      video.srcObject = stream;
-      video.style.pointerEvents = 'none';
-      video.id = userID;
       video.addEventListener('loadedmetadata', () => {
         video.play();
       });
       this.createDivForTheVideo(video);
-    });
-   // var that = this;
-  //setTimeout(function () {
-      //that.createDivForNoCameraMode(userID);
-    //}, 2000);
+    }
   }
-  // createDivForNoCameraMode(userID) {
-  //   if(this.myStream.active){
-  //       const div = <HTMLDivElement>document.createElement('div');
-  //       div.id = userID;
-  //       this.createDivForTheVideo(div);
-  // }
-  // }
+  addVideoStreamForNewUser(peer, userID) {
+    peer.on('stream', (stream) => {
+      if (!stream.getVideoTracks()[0]) {
+        this.createDivforNoCamera(userID, stream);
+      } else {
+        const video = document.createElement('video');
+        video.srcObject = stream;
+        video.style.pointerEvents = 'none';
+        video.id = userID;
+        video.addEventListener('loadedmetadata', () => {
+          video.play();
+        });
+        this.createDivForTheVideo(video);
+      }
+    });
+  }
+  createDivforNoCamera(userID, stream) {
+    const div = <HTMLDivElement>document.createElement('div');
+    div.className = 'd-flex justify-content-center';
+    div.style.height = '100%';
+    div.style.width = '100%';
+    const icon = document.createElement('i');
+    icon.className = ' fas fa-user-alt text-muted';
+    icon.style.fontSize = '350%';
+
+    const video = document.createElement('video');
+    video.srcObject = stream;
+    video.style.pointerEvents = 'none';
+    video.id = userID;
+    video.addEventListener('loadedmetadata', () => {
+      video.play();
+    });
+    div.appendChild(video);
+    div.appendChild(icon);
+    div.id = userID;
+    this.createDivForTheVideo(div);
+  }
+
   createDivForTheVideo(video) {
     video.style.transform = 'rotateY(180deg)';
     video.style.webkitTransform = 'rotateY(180deg)';
     const div = <HTMLDivElement>document.createElement('div');
     div.className =
-      'embed-responsive embed-responsive-16by9 videoDiv rounded mt-1';
+      'd-flex align-items-center embed-responsive embed-responsive-16by9 videoDiv rounded mt-1';
     div.style.backgroundColor = '#202124';
     if (this.mediaQuery.matches) {
       div.style.height = '100%';
