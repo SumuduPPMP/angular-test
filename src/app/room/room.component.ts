@@ -377,11 +377,12 @@ export class RoomComponent implements OnInit {
     this.data.currentRoom.subscribe((data) => (this.roomID = data));
     this.data.mic.subscribe((data) => (this.micOn = data));
     this.data.camera.subscribe((data) => (this.videoOn = data));
+    this.TooltipFscreen = 'Full screen';
     if (isCamera) {
       var audiotrack = this.myStream.getAudioTracks()[0];
       var videotrack = this.myStream.getVideoTracks()[0];
 
-      this.TooltipFscreen = 'Full screen';
+
       if (this.micOn) {
         this.TooltipMic = 'Turn off mic';
         audiotrack.enabled = true;
