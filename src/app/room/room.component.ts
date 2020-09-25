@@ -197,6 +197,7 @@ export class RoomComponent implements OnInit {
      // if (!stream.getVideoTracks()[0]) {
      //   this.createDivforNoCamera(userID, stream);
      // } else {
+       console.log("csllinf twoise")
         const video = document.createElement('video');
         video.srcObject = stream;
         video.style.pointerEvents = 'none';
@@ -226,7 +227,6 @@ export class RoomComponent implements OnInit {
     });
     div.appendChild(video);
     div.appendChild(icon);
-    div.id = userID;
     this.createDivForTheVideo(div);
   }
 
