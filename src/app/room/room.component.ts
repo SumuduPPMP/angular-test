@@ -114,7 +114,6 @@ export class RoomComponent implements OnInit {
           peer,
         });
         peers.push(peer);
-        console.log("users in already")
         this.addVideoStreamForNewUser(peer, userID);
       });
       this.peersArray = peers;
@@ -151,7 +150,7 @@ export class RoomComponent implements OnInit {
     });
 
     peer.on('signal', (signal) => {
-      console.log(userToSignal)
+      console.log("after create peer")
       this.socketRef.emit('sending signal', {
         userToSignal,
         callerID,
@@ -195,7 +194,6 @@ export class RoomComponent implements OnInit {
     }
   }
   addVideoStreamForNewUser(peer, userID) {
-    console.log("csllinf twoise")
     peer.on('stream', (stream) => {
       if (!stream.getVideoTracks()[0]) {
         this.createDivforNoCamera(userID, stream);
@@ -232,6 +230,7 @@ export class RoomComponent implements OnInit {
     });
     div.appendChild(video);
     div.appendChild(icon);
+    div.id = userID;
     this.createDivForTheVideo(div);
   }
 
