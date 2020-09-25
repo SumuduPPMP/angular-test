@@ -114,6 +114,7 @@ export class RoomComponent implements OnInit {
           peer,
         });
         peers.push(peer);
+        console.log("users in already")
         this.addVideoStreamForNewUser(peer, userID);
       });
       this.peersArray = peers;
@@ -132,7 +133,7 @@ export class RoomComponent implements OnInit {
         peer,
       });
       this.peersArray.push(peer);
-      const video = <HTMLVideoElement>document.createElement('video');
+      console.log("user joind")
       this.addVideoStreamForNewUser(peer, payload.callerID);
     });
 
@@ -194,12 +195,15 @@ export class RoomComponent implements OnInit {
   }
   addVideoStreamForNewUser(peer, userID) {
     console.log("csllinf twoise")
+    var id;
+    if(id!=userID){
     peer.on('stream', (stream) => {
      // if (!stream.getVideoTracks()[0]) {
      //   this.createDivforNoCamera(userID, stream);
      // } else {
 
-        const video = document.createElement('video');
+
+  const video = document.createElement('video');
         video.srcObject = stream;
         video.style.pointerEvents = 'none';
         video.id = userID;
@@ -207,8 +211,13 @@ export class RoomComponent implements OnInit {
           video.play();
         });
         this.createDivForTheVideo(video);
+
+
+
      // }
     });
+    id = userID;
+  }
   }
   createDivforNoCamera(userID, stream) {
     const div = <HTMLDivElement>document.createElement('div');
