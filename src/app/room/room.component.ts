@@ -1,7 +1,7 @@
 import { async } from '@angular/core/testing';
 //import { WebSocketService } from './../web-socket.service';
 import { element } from 'protractor';
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild} from '@angular/core';
 import * as io from 'socket.io-client';
 import * as SimplePeer from 'simple-peer';
 import { DataService } from './../data.service';
@@ -151,6 +151,7 @@ export class RoomComponent implements OnInit {
     });
 
     peer.on('signal', (signal) => {
+      console.log(userToSignal)
       this.socketRef.emit('sending signal', {
         userToSignal,
         callerID,
@@ -195,12 +196,10 @@ export class RoomComponent implements OnInit {
   }
   addVideoStreamForNewUser(peer, userID) {
     console.log("csllinf twoise")
-    var id;
-    if(id!=userID){
     peer.on('stream', (stream) => {
-     // if (!stream.getVideoTracks()[0]) {
-     //   this.createDivforNoCamera(userID, stream);
-     // } else {
+      if (!stream.getVideoTracks()[0]) {
+        this.createDivforNoCamera(userID, stream);
+      } else {
 
 
   const video = document.createElement('video');
@@ -212,12 +211,8 @@ export class RoomComponent implements OnInit {
         });
         this.createDivForTheVideo(video);
 
-
-
-     // }
+      }
     });
-    id = userID;
-  }
   }
   createDivforNoCamera(userID, stream) {
     const div = <HTMLDivElement>document.createElement('div');
