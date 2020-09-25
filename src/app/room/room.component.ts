@@ -193,11 +193,12 @@ export class RoomComponent implements OnInit {
     }
   }
   addVideoStreamForNewUser(peer, userID) {
+    console.log("csllinf twoise")
     peer.on('stream', (stream) => {
      // if (!stream.getVideoTracks()[0]) {
      //   this.createDivforNoCamera(userID, stream);
      // } else {
-       console.log("csllinf twoise")
+
         const video = document.createElement('video');
         video.srcObject = stream;
         video.style.pointerEvents = 'none';
