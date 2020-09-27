@@ -194,6 +194,8 @@ export class RoomComponent implements OnInit {
   }
   addVideoStreamForNewUser(peer, userID) {
     peer.on('stream', (stream) => {
+      console.log("stream.getVideoTracks()")
+      console.log(stream.getVideoTracks())
       if (!stream.getVideoTracks()[0]) {
         this.createDivforNoCamera(userID, stream);
       } else {
