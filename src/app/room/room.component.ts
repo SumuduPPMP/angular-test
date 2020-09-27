@@ -78,19 +78,20 @@ export class RoomComponent implements OnInit {
     });
 
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
+      .getUserMedia({ video: true||false, audio: true })
       .then((stream) => {
         this.cameraAvailable = true;
         this.coreFunction(stream);
       })
       .catch((err) => {
-        navigator.mediaDevices
-          .getUserMedia({ video: false, audio: true })
-          .then((stream) => {
-            this.cameraAvailable = false;
-            this.coreFunction(stream);
-          });
+        // navigator.mediaDevices
+        //   .getUserMedia({ video: false, audio: true })
+        //   .then((stream) => {
+        //     this.cameraAvailable = false;
+        //     this.coreFunction(stream);
+        //   });
       });
+     // navigator.mediaDevices.MediaStreamConstraints.video
   }
 
   //functions.....
