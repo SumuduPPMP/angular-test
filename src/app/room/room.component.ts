@@ -82,7 +82,7 @@ export class RoomComponent implements OnInit {
       var mics = devices.filter(device => device.kind == "audioinput");
       if(cams.length>0){
         navigator.mediaDevices
-      .getUserMedia({ video: false, audio: true })
+      .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         console.log(stream);
         this.cameraAvailable = true;
