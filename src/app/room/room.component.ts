@@ -174,17 +174,17 @@ export class RoomComponent implements OnInit {
       trickle: false,
       stream,
     });
- var userid
+// var userid
     peer.on('signal', (signal) => {
-      if(userid != userToSignal){
+      //if(userid != userToSignal){
         this.socketRef.emit('sending signal', {
           userToSignal,
           callerID,
           signal,
         });
-      }
+     // }
 
-      userid =userToSignal
+      //userid =userToSignal
     });
 
     return peer;
@@ -223,8 +223,10 @@ export class RoomComponent implements OnInit {
     }
   }
   addVideoStreamForNewUser(peer, userID) {
+    var userid
     peer.on('stream', (stream) => {
-      console.log('stream.getVideoTracks() 223');
+      if(userid != userID){
+        console.log('stream.getVideoTracks() 223');
       console.log(stream.getVideoTracks());
       if (stream.getVideoTracks().lenth>0) {
         this.createDivforNoCamera(userID, stream);
@@ -239,6 +241,9 @@ export class RoomComponent implements OnInit {
         });
         this.createDivForTheVideo(video);
       }
+      }
+      userid = userID
+
     });
   }
   createDivforNoCamera(userID, stream) {
