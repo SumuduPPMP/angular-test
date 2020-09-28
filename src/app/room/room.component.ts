@@ -209,7 +209,7 @@ export class RoomComponent implements OnInit {
     peer.on('stream', (stream) => {
       console.log('stream.getVideoTracks()');
       console.log(stream.getVideoTracks());
-      if (!stream.getVideoTracks()[0]) {
+      if (stream.getVideoTracks().length == 0) {
         this.createDivforNoCamera(userID, stream);
       } else {
         const video = document.createElement('video');
