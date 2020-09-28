@@ -174,17 +174,17 @@ export class RoomComponent implements OnInit {
       trickle: false,
       stream,
     });
-// var userid
+ var userid
     peer.on('signal', (signal) => {
-      //if(userid != userToSignal){
+      if(userid != userToSignal){
         this.socketRef.emit('sending signal', {
           userToSignal,
           callerID,
           signal,
         });
-     // }
+      }
 
-      //userid =userToSignal
+      userid =userToSignal
     });
 
     return peer;
