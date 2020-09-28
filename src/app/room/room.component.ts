@@ -77,6 +77,7 @@ export class RoomComponent implements OnInit {
     this.socketRef.on('time', (time) => {
       this.getCurrentTime();
     });
+
     navigator.mediaDevices.enumerateDevices().then(devices => {
       var cams = devices.filter(device => device.kind == "videoinput");
       var mics = devices.filter(device => device.kind == "audioinput");
@@ -84,45 +85,29 @@ export class RoomComponent implements OnInit {
         navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
-        console.log(stream);
+        console.log("camera");
         this.cameraAvailable = true;
         this.coreFunction(stream);
 
       })
-      .catch((err1) => {
-        console.log(err1);
-
+      .catch((err) => {
+        console.log(err);
       });
 
       } else{
+        console.log(" No camera");
         navigator.mediaDevices
           .getUserMedia({ video: false, audio: true })
           .then((stream) => {
             this.cameraAvailable = false;
             this.coreFunction(stream);
+          })
+          .catch((err) => {
+            console.log(err);
           });
 
       }
     })
-
-    // navigator.mediaDevices
-    //   .getUserMedia({ video: true, audio: true })
-    //   .then((stream) => {
-    //     console.log(stream);
-    //     this.cameraAvailable = true;
-    //     this.coreFunction(stream);
-
-    //   })
-    //   .catch((err1) => {
-    //     console.log(err1);
-    //     navigator.mediaDevices
-    //       .getUserMedia({ video: false, audio: true })
-    //       .then((stream) => {
-    //         this.cameraAvailable = false;
-    //         this.coreFunction(stream);
-    //       });
-    //   });
-    // navigator.mediaDevices.MediaStreamConstraints.video
   }
 
   //functions.....
@@ -152,6 +137,7 @@ export class RoomComponent implements OnInit {
           });
           peers.push(peer);
           this.addVideoStreamForNewUser(peer, userID);
+          console.log("room users");
         });
         this.peersArray = peers;
       });
@@ -234,10 +220,11 @@ export class RoomComponent implements OnInit {
   }
   addVideoStreamForNewUser(peer, userID) {
     peer.on('stream', (stream) => {
-      console.log('stream.getVideoTracks()');
+      console.log('stream.getVideoTracks() 223');
       console.log(stream.getVideoTracks());
       if (!stream.getVideoTracks()[0]) {
         this.createDivforNoCamera(userID, stream);
+        console.log("divs for no camera");
       } else {
         const video = document.createElement('video');
         video.srcObject = stream;
