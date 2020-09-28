@@ -50,7 +50,7 @@ export class RoomComponent implements OnInit {
 
   constructor(private data: DataService) {
     //this.socketRef = io(this.uri);
-    //this.socketRef = io();
+    this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -80,7 +80,7 @@ export class RoomComponent implements OnInit {
     navigator.mediaDevices.enumerateDevices().then(devices => {
       var cams = devices.filter(device => device.kind == "videoinput");
       var mics = devices.filter(device => device.kind == "audioinput");
-      if(cams){
+      if(cams.length>0){
         navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
