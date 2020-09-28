@@ -24,7 +24,7 @@ export class RoomComponent implements OnInit {
   roomID: string;
   host = window.location.hostname;
   //uri: string = 'https://angular-test-video.herokuapp.com';
-  //uri: string = 'ws://localhost:3000';
+  uri: string = 'ws://localhost:3000';
   //Peer = require('simple-peer')
 
   peersRef: any = [];
@@ -49,8 +49,8 @@ export class RoomComponent implements OnInit {
   videoStream: MediaStream;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -87,8 +87,8 @@ export class RoomComponent implements OnInit {
       .then((stream) => {
         console.log("camera");
         this.cameraAvailable = true;
+        this.myStream = stream;
         this.coreFunction(stream);
-
       })
       .catch((err) => {
         console.log(err);
@@ -100,6 +100,7 @@ export class RoomComponent implements OnInit {
           .getUserMedia({ video: false, audio: true })
           .then((stream) => {
             this.cameraAvailable = false;
+            this.myStream = stream;
             this.coreFunction(stream);
           })
           .catch((err) => {
@@ -113,13 +114,12 @@ export class RoomComponent implements OnInit {
   //functions.....
   coreFunction(stream) {
     try {
-      this.myStream = stream;
       this.setRoomIdAndStates(this.cameraAvailable);
       const video = <HTMLVideoElement>document.createElement('video');
       video.muted = true;
       video.style.pointerEvents = 'none';
       this.userCount = 1;
-      this.addVideoStream(video, this.myStream);
+      this.addVideoStream(video, stream);
       this.socketRef.emit('join room', this.roomID);
       this.socketRef.on('all users', (users) => {
         this.usersArray = users;
@@ -129,7 +129,7 @@ export class RoomComponent implements OnInit {
           const peer = this.createPeer(
             userID,
             this.socketRef.id,
-            this.myStream
+            stream
           );
           this.peersRef.push({
             peerID: userID,
@@ -148,7 +148,7 @@ export class RoomComponent implements OnInit {
         const peer = this.addPeer(
           payload.signal,
           payload.callerID,
-          this.myStream
+          stream
         );
         this.peersRef.push({
           peerID: payload.callerID,
