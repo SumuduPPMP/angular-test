@@ -50,7 +50,7 @@ export class RoomComponent implements OnInit {
 
   constructor(private data: DataService) {
     //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    //this.socketRef = io();
   }
 
   ngOnInit(): void {
@@ -77,8 +77,11 @@ export class RoomComponent implements OnInit {
     this.socketRef.on('time', (time) => {
       this.getCurrentTime();
     });
-
-    navigator.mediaDevices
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      var cams = devices.filter(device => device.kind == "videoinput");
+      var mics = devices.filter(device => device.kind == "audioinput");
+      if(cams){
+        navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         console.log(stream);
@@ -88,13 +91,37 @@ export class RoomComponent implements OnInit {
       })
       .catch((err1) => {
         console.log(err1);
+
+      });
+
+      } else{
         navigator.mediaDevices
           .getUserMedia({ video: false, audio: true })
           .then((stream) => {
             this.cameraAvailable = false;
             this.coreFunction(stream);
           });
-      });
+
+      }
+    })
+
+    // navigator.mediaDevices
+    //   .getUserMedia({ video: true, audio: true })
+    //   .then((stream) => {
+    //     console.log(stream);
+    //     this.cameraAvailable = true;
+    //     this.coreFunction(stream);
+
+    //   })
+    //   .catch((err1) => {
+    //     console.log(err1);
+    //     navigator.mediaDevices
+    //       .getUserMedia({ video: false, audio: true })
+    //       .then((stream) => {
+    //         this.cameraAvailable = false;
+    //         this.coreFunction(stream);
+    //       });
+    //   });
     // navigator.mediaDevices.MediaStreamConstraints.video
   }
 
@@ -209,7 +236,7 @@ export class RoomComponent implements OnInit {
     peer.on('stream', (stream) => {
       console.log('stream.getVideoTracks()');
       console.log(stream.getVideoTracks());
-      if (stream.getVideoTracks().length == 0) {
+      if (!stream.getVideoTracks()[0]) {
         this.createDivforNoCamera(userID, stream);
       } else {
         const video = document.createElement('video');
