@@ -223,9 +223,7 @@ export class RoomComponent implements OnInit {
     }
   }
   addVideoStreamForNewUser(peer, userID) {
-    var userid
     peer.on('stream', (stream) => {
-      if(userid != userID){
         console.log('stream.getVideoTracks() 223');
       console.log(stream.getVideoTracks());
       if (stream.getVideoTracks().lenth>0) {
@@ -241,8 +239,6 @@ export class RoomComponent implements OnInit {
         });
         this.createDivForTheVideo(video);
       }
-      }
-      userid = userID
 
     });
   }
