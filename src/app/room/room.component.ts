@@ -279,7 +279,7 @@ export class RoomComponent implements OnInit {
     div.id = userID;
     this.createDivForTheVideo(div);
     }
-    streamid = stream.id
+    streamid = this.mediaStreamIdWithoutCamera
   }
 
   createDivForTheVideo(video) {
