@@ -180,14 +180,14 @@ export class RoomComponent implements OnInit {
     });
  var userid
     peer.on('signal', (signal) => {
-      if(userid != userToSignal){
+      //if(userid != userToSignal){
         console.log("sending signal:" + userToSignal);
         this.socketRef.emit('sending signal', {
           userToSignal,
           callerID,
           signal,
         });
-      }
+      //}
       userid =userToSignal
     });
 
@@ -237,7 +237,7 @@ export class RoomComponent implements OnInit {
         console.log(stream);
         console.log(stream.getVideoTracks());
         console.log(stream.getVideoTracks()[0]);
-        console.log(stream.getVideoTracks()[1]);
+        console.log(stream.id);
       if (this.mediaStreamIdWithoutCamera == stream.id) {
       //if (!stream.getVideoTracks()[0]) {
         this.createDivforNoCamera(userID, stream);
