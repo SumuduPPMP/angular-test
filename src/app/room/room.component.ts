@@ -238,6 +238,7 @@ export class RoomComponent implements OnInit {
         console.log(stream.getVideoTracks());
         console.log(stream.getVideoTracks()[0]);
         console.log(stream.id);
+        console.log(this.mediaStreamIdWithoutCamera);
       if (this.mediaStreamIdWithoutCamera == stream.id) {
       //if (!stream.getVideoTracks()[0]) {
         this.createDivforNoCamera(userID, stream);
