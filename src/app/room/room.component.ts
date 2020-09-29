@@ -148,7 +148,8 @@ export class RoomComponent implements OnInit {
       });
 
       this.socketRef.on('user joined', (payload) => {
-        this.newUserJoin = true;
+        if(this.cameralessStreamId != payload.callerID){
+          this.newUserJoin = true;
         this.userCount++;
         const peer = this.addPeer(
           payload.signal,
@@ -162,6 +163,10 @@ export class RoomComponent implements OnInit {
         this.peersArray.push(peer);
         console.log('user joind');
         this.addVideoStreamForNewUser(peer, payload.callerID);
+
+        this.cameralessStreamId = payload.callerID
+        }
+
       });
 
       this.socketRef.on('receiving returned signal', (payload) => {
@@ -179,9 +184,7 @@ export class RoomComponent implements OnInit {
       trickle: false,
       stream,
     });
- var userid
     peer.on('signal', (signal) => {
-     // if(userid != userToSignal){
        try{
          console.log("sending signal:" + userToSignal);
        this.socketRef.emit('sending signal', {
@@ -192,9 +195,6 @@ export class RoomComponent implements OnInit {
       }catch(err){
         console.log(err);
       }
-
-      //}
-      userid =userToSignal
     });
 
     return peer;
@@ -214,10 +214,6 @@ export class RoomComponent implements OnInit {
   }
 
   addVideoStream(video: HTMLVideoElement, stream: MediaStream) {
-      console.log('stream.getVideoTracks() 206');
-      console.log(stream);
-      console.log(stream.getVideoTracks());
-      console.log(stream.getVideoTracks()[0]);
     if (!this.myStream.getVideoTracks()[0]) {
       const div = <HTMLDivElement>document.createElement('div');
       div.className = 'd-flex justify-content-center';
