@@ -148,7 +148,7 @@ export class RoomComponent implements OnInit {
       });
 
       this.socketRef.on('user joined', (payload) => {
-        if(this.cameralessStreamId != payload.callerID){
+        //if(this.cameralessStreamId != payload.callerID){
           this.newUserJoin = true;
         this.userCount++;
         const peer = this.addPeer(
@@ -164,8 +164,8 @@ export class RoomComponent implements OnInit {
         console.log('user joind');
         this.addVideoStreamForNewUser(peer, payload.callerID);
 
-        this.cameralessStreamId = payload.callerID
-        }
+       // this.cameralessStreamId = payload.callerID
+       // }
 
       });
 
