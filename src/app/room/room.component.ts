@@ -181,12 +181,17 @@ export class RoomComponent implements OnInit {
  var userid
     peer.on('signal', (signal) => {
      // if(userid != userToSignal){
-        console.log("sending signal:" + userToSignal);
-        this.socketRef.emit('sending signal', {
-          userToSignal,
-          callerID,
-          signal,
-        });
+       try{
+         console.log("sending signal:" + userToSignal);
+       this.socketRef.emit('sending signal', {
+         userToSignal,
+         callerID,
+         signal,
+       });
+      }catch(err){
+        console.log(err);
+      }
+
       //}
       userid =userToSignal
     });
@@ -257,6 +262,7 @@ export class RoomComponent implements OnInit {
   createDivforNoCamera(userID, stream) {
     var streamid
     if(streamid != stream.id){
+      console.log("....................260 divs for no camera");
       console.log(streamid);
       console.log(stream.id);
       const div = <HTMLDivElement>document.createElement('div');
