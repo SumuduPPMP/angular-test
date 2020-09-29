@@ -238,7 +238,7 @@ export class RoomComponent implements OnInit {
         console.log(stream.getVideoTracks()[0]);
         console.log(stream.id);
         console.log(this.mediaStreamIdWithoutCamera);
-      if (!stream.getVideoTracks()[0]) {
+      if (this.mediaStreamIdWithoutCamera == stream.id) {
         this.createDivforNoCamera(userID, stream);
         console.log("divs for no camera");
       } else {
@@ -257,6 +257,8 @@ export class RoomComponent implements OnInit {
   createDivforNoCamera(userID, stream) {
     var streamid
     if(streamid != stream.id){
+      console.log(streamid);
+      console.log(stream.id);
       const div = <HTMLDivElement>document.createElement('div');
     div.className = 'd-flex justify-content-center';
     div.style.height = '100%';
