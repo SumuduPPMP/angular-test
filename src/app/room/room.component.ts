@@ -203,8 +203,11 @@ export class RoomComponent implements OnInit {
   }
 
   addVideoStream(video: HTMLVideoElement, stream: MediaStream) {
-    console.log('stream.getVideoTracks() 206');
+      console.log('stream.getVideoTracks() 206');
       console.log(stream);
+      console.log(stream.getVideoTracks());
+      console.log(stream.getVideoTracks()[0]);
+      console.log(stream.getVideoTracks()[1]);
     if (!this.myStream.getVideoTracks()[0]) {
       const div = <HTMLDivElement>document.createElement('div');
       div.className = 'd-flex justify-content-center';
