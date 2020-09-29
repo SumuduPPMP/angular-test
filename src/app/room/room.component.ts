@@ -47,6 +47,7 @@ export class RoomComponent implements OnInit {
   myStream: MediaStream;
   mediaQuery;
   mediaStreamIdWithoutCamera: string;
+  cameralessStreamId ="abcd";
 
   constructor(private data: DataService) {
     //this.socketRef = io(this.uri);
@@ -238,8 +239,7 @@ export class RoomComponent implements OnInit {
   addVideoStreamForNewUser(peer, userID) {
     peer.on('stream', (stream) => {
 
-      var streamid
-    if(streamid != stream.id){
+    if(this.cameralessStreamId != stream.id){
       if (this.mediaStreamIdWithoutCamera == stream.id) {
         this.createDivforNoCamera(userID, stream);
         console.log("divs for no camera");
@@ -253,7 +253,7 @@ export class RoomComponent implements OnInit {
         });
         this.createDivForTheVideo(video);
       }
-      streamid = stream.id
+      this.cameralessStreamId = stream.id
     }
 
 
