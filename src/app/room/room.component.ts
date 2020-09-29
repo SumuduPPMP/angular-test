@@ -74,7 +74,7 @@ export class RoomComponent implements OnInit {
       this.screenShareActive = false;
       this.mirrorAndFullScreenVideo(user_id);
     });
-    this.socketRef.on('media stream without camera', (stream_id) => {
+    this.socketRef.on('videoless stream', (stream_id) => {
       this.mediaStreamIdWithoutCamera = stream_id
     });
     this.socketRef.on('time', (time) => {
@@ -104,7 +104,7 @@ export class RoomComponent implements OnInit {
           .then((stream) => {
             this.cameraAvailable = false;
             this.myStream = stream;
-            this.socketRef.emit('media stream without camera', stream.id)
+            this.socketRef.emit('without camera', stream.id)
             this.coreFunction(stream);
           })
           .catch((err) => {
@@ -180,14 +180,14 @@ export class RoomComponent implements OnInit {
     });
  var userid
     peer.on('signal', (signal) => {
-      if(userid != userToSignal){
+     // if(userid != userToSignal){
         console.log("sending signal:" + userToSignal);
         this.socketRef.emit('sending signal', {
           userToSignal,
           callerID,
           signal,
         });
-      }
+      //}
       userid =userToSignal
     });
 
@@ -212,7 +212,6 @@ export class RoomComponent implements OnInit {
       console.log(stream);
       console.log(stream.getVideoTracks());
       console.log(stream.getVideoTracks()[0]);
-      console.log(stream.getVideoTracks()[1]);
     if (!this.myStream.getVideoTracks()[0]) {
       const div = <HTMLDivElement>document.createElement('div');
       div.className = 'd-flex justify-content-center';
