@@ -242,6 +242,7 @@ export class RoomComponent implements OnInit {
     if(this.cameralessStreamId != stream.id){
       if (this.mediaStreamIdWithoutCamera == stream.id) {
         this.createDivforNoCamera(userID, stream);
+        this.userCount--
         console.log("divs for no camera");
       } else {
         const video = document.createElement('video');
@@ -262,12 +263,7 @@ export class RoomComponent implements OnInit {
     });
   }
   createDivforNoCamera(userID, stream) {
-    var streamid
-    if(streamid != stream.id){
-      console.log("....................260 divs for no camera");
-      console.log(streamid);
-      console.log(stream.id);
-      const div = <HTMLDivElement>document.createElement('div');
+    const div = <HTMLDivElement>document.createElement('div');
     div.className = 'd-flex justify-content-center';
     div.style.height = '100%';
     div.style.width = '100%';
@@ -286,9 +282,6 @@ export class RoomComponent implements OnInit {
     div.appendChild(icon);
     div.id = userID;
     this.createDivForTheVideo(div);
-    streamid = this.mediaStreamIdWithoutCamera
-    }
-    streamid = this.mediaStreamIdWithoutCamera
   }
 
   createDivForTheVideo(video) {
