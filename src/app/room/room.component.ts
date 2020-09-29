@@ -46,7 +46,7 @@ export class RoomComponent implements OnInit {
   currentTime;
   myStream: MediaStream;
   mediaQuery;
-  videoStream: MediaStream;
+  mediaStreamIdWithoutCamera: string;
 
   constructor(private data: DataService) {
     //this.socketRef = io(this.uri);
@@ -73,6 +73,9 @@ export class RoomComponent implements OnInit {
     this.socketRef.on('sharescreen ended', (user_id) => {
       this.screenShareActive = false;
       this.mirrorAndFullScreenVideo(user_id);
+    });
+    this.socketRef.on('media stream without camera', (stream_id) => {
+      this.mediaStreamIdWithoutCamera = stream_id
     });
     this.socketRef.on('time', (time) => {
       this.getCurrentTime();
@@ -101,6 +104,7 @@ export class RoomComponent implements OnInit {
           .then((stream) => {
             this.cameraAvailable = false;
             this.myStream = stream;
+            this.socketRef.emit('media stream without camera', stream.id)
             this.coreFunction(stream);
           })
           .catch((err) => {
@@ -234,7 +238,8 @@ export class RoomComponent implements OnInit {
         console.log(stream.getVideoTracks());
         console.log(stream.getVideoTracks()[0]);
         console.log(stream.getVideoTracks()[1]);
-      if (!stream.getVideoTracks()[0]) {
+      if (this.mediaStreamIdWithoutCamera == stream.id) {
+      //if (!stream.getVideoTracks()[0]) {
         this.createDivforNoCamera(userID, stream);
         console.log("divs for no camera");
       } else {

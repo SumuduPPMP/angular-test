@@ -87,6 +87,15 @@ io.on('connection', socket => {
         socket.broadcast.emit("sharescreen ended",user_id);
       }
   })
+
+  socket.on('media stream without camera', stream_id =>{
+    const roomID = socketToRoom[socket.id];
+      let room = users[roomID];
+      if (room) {
+        socket.broadcast.emit("media stream without camera",stream_id);
+      }
+  })
+
 });
  setInterval(() => io.emit('time', new Date()), 1000);
 
