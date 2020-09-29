@@ -176,13 +176,14 @@ export class RoomComponent implements OnInit {
     });
  var userid
     peer.on('signal', (signal) => {
-      //if(userid != userToSignal && !this.cameraAvailable){
+      if(userid != userToSignal && !this.cameraAvailable){
+        console.log("sending signal:" + userToSignal);
         this.socketRef.emit('sending signal', {
           userToSignal,
           callerID,
           signal,
         });
-     // }
+      }
       userid =userToSignal
     });
 
