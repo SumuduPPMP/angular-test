@@ -238,7 +238,7 @@ export class RoomComponent implements OnInit {
     if(this.cameralessStreamId != stream.id){
       if (this.mediaStreamIdWithoutCamera == stream.id) {
         this.createDivforNoCamera(userID, stream);
-        this.userCount--
+        //this.userCount--
         console.log("divs for no camera");
       } else {
         const video = document.createElement('video');
