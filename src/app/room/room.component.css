@@ -9,26 +9,87 @@
   position: fixed;
   bottom: 0px;
   left: 0px;
-  background-color:#eaebec;
+  background-color:#fcfcfc;
   width: 100%;
   height: 75px;
   z-index: 1000000;
   animation: footerUp 2s;
 }
+.chatBtn{
+  color: #067060;
+}
+.chatIcon{
+  position: relative;
+  top: -7px;
+}
+.chatIndicator{
+  width:14px;
+  height:14px;
+  border-radius: 7px;
+  background-color:tomato;
+  position: relative;
+  left:25px;
+  top: -5px;
+  opacity:0;
+}
+.zeroOpacity{
+  opacity:0;
+}
+.fullOpacity{
+  opacity:1;
+}
+.chatActive{
+  background-color: #067060 ;
+  border-color: #067060;
+  color: #fff;
+}
+.chatActive:hover{
+  background-color: #067060 !important;
+}
+.calbtn{
+  color:tomato;
+}
+.cameraMicBtn{
+  color:#4d5054;
+}
+.cameraMicOffActive{
+  background-color: tomato ;
+  border-color: tomato;
+  color: #fff;
+}
+.cameraMicOffActive:hover{
+  background-color: tomato !important;
+}
 .videoBtns{
   width: 50px;
   height: 50px;
   border-radius: 25px;
+  font-size: 18px;
+  border-color: #bfbfbf;
+  border-width: 1px;
+}
+.videoBtns:hover{
+  background-color:#f0f0f0 ;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px);
 }
 .fullscnButton{
   position: absolute;
   font-size: 20px;
+  color:#4d5054;
   right :50px;
+}
+.fullscnButton:hover{
+  color:#36383b;
 }
 .scnShareButton{
   position: absolute;
   font-size: 20px;
+  color:#4d5054;
   right :100px;
+}
+.scnShareButton:hover{
+  color:#36383b;
 }
 .sharecnoptions{
   position: absolute;
@@ -61,6 +122,7 @@
   z-index: 100;
   height: 100vh;
   margin-top:55px;
+  transition: 0.5s;
 }
 .user-alart{
   position: absolute;
@@ -69,18 +131,40 @@
   width: 100%;
   z-index: 1;
   opacity: 0;
+  pointer-events: none;
   animation: alertShowAndHide 5s;
   }
   .timecard{
     padding-top: 5px;
     position: absolute;
-    background-color:#eaebec;
+    background-color:#fcfcfc;
+    color:#4d5054;
     top: 3px;
     right: 3px;
     width: 250px;
     height:50px;
-    z-index: 1;
+    z-index: 102;
+    transition: 0.5s;
   }
+.msgAlart{
+  position: absolute;
+  background-color:#fcfcfc;
+  border-radius: 5px;
+  color:#4d5054;
+  bottom: 120px;
+  right: 20px;
+  width: 250px;
+  height:70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 102;
+  border: 1px solid #067060;
+  transition: 0.5s;
+  opacity: 0;
+  pointer-events: none;
+}
 @keyframes footerUp {
   from {bottom: -80px;}
   to {bottom:0px;}
@@ -108,7 +192,6 @@
       display: block;
       overflow: hidden;
     }
-
     .timecard{
       position: fixed;
       background-color:#eaebec;
@@ -130,6 +213,13 @@
     }
     .sharecnoptions{
       display: none;
+    }
+
+    .sidebarOpen {
+      width: 100% !important;
+    }
+    .addMargginForMain{
+      margin-right: 100% !important;
     }
 
    }
@@ -154,5 +244,47 @@
     }
    }
 
+.newMewssageOpen{
+  opacity: 1;
+  pointer-events:all;
+  cursor: pointer;
+}
+/* side bar styles */
+.sidebar {
+  background-color:#fcfcfc;
+  height: 100%;
+  width: 0px;
+  position: fixed;
+  z-index: 101;
+  top: 0;
+  right: 0;
+  transition: 0.5s;
+}
+.sidebarOpen {
+  width: 380px;
+}
+.addMargginForMain{
+  margin-right: 365px;
+}
+.timecardanimation{
+  width:373px !important;
+}
+.othervideoanimation{
+  margin-right: 100px !important;
+  width:0px !important;
+  opacity: 0px;
+}
+.closebtn {
+  color:#cccccc;
+  margin-left:12px;
+  margin-top:55px;
+  font-size: 30px;
+  cursor: pointer;
+}
+
+#main {
+  transition: margin-right .5s;
+  padding: 0px;
+}
 
 

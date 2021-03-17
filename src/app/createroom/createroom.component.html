@@ -1,7 +1,7 @@
 <div
   class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm"
 >
-  <div class="my-0 mr-md-auto custom_margin" style="color: #22b2c9;">
+  <div class="my-0 mr-md-auto custom_margin" style="color: #067060">
     <h2 class="font-weight-normal float-left">PPMP MEET</h2>
     <p class="float-right">&reg;</p>
   </div>
@@ -30,42 +30,58 @@
             width: 100%;
           "
         >
-          <button class="btn btn-sm m-2 ownVideoBtns" [ngClass]="{'btn-light':micOn,'btn-danger':!micOn}" placement="top" ngbTooltip="{{TooltipMic}}" (click)="micOnOff()">
+          <button
+            class="btn btn-sm m-2 ownVideoBtns"
+            [ngClass]="{ 'btn-light': micOn, 'btn-danger': !micOn }"
+            placement="top"
+            ngbTooltip="{{ TooltipMic }}"
+            (click)="micOnOff()"
+          >
             <i *ngIf="micOn" class="text-info fas fa-microphone"></i>
             <i *ngIf="!micOn" class="text-white fas fa-microphone-slash"></i>
           </button>
-          <button class="btn btn-sm btn-light m-2 ownVideoBtns" [ngClass]="{'btn-light':videoOn,'btn-danger':!videoOn}" placement="top" ngbTooltip="{{TooltipVideo}}" (click)="videoOnOff()">
+          <button
+            class="btn btn-sm btn-light m-2 ownVideoBtns"
+            [ngClass]="{ 'btn-light': videoOn, 'btn-danger': !videoOn }"
+            placement="top"
+            ngbTooltip="{{ TooltipVideo }}"
+            (click)="videoOnOff()"
+          >
             <i *ngIf="videoOn" class="text-info fas fa-video"></i>
             <i *ngIf="!videoOn" class="text-white fas fa-video-slash"></i>
           </button>
         </div>
       </div>
     </div>
-    <div id="" class="col-md-3 d-flex align-items-center justify-content-center text-center custom">
+    <div
+      id=""
+      class="col-md-3 d-flex align-items-center justify-content-center text-center custom"
+    >
+      <form #joinMeet="ngForm">
+        <h2 class="font-weight-normal mobile_text text-muted">PPMP MEET</h2>
+        <p class="text-secondary mobile_text text-muted">
+          Pleace enter the meeting code to the join meeting
+        </p>
+        <div class="form-group mb-3">
+          <input
+            type="text"
+            class="form-control text-muted rounded"
+            required
+            ngModel
+            name="room_code"
+            #room_code="ngModel"
+            placeholder="Enter the meeting code "
+          />
 
-        <form #joinMeet="ngForm">
-          <h2 class="font-weight-normal mobile_text">PPMP MEET</h2>
-          <p class="text-secondary mobile_text">Pleace enter the meeting code to the join meeting</p>
-          <div class="form-group mb-3">
-            <input
-              type="text"
-              class="form-control"
-              required
-              ngModel
-              name="room_code"
-              #room_code="ngModel"
-              placeholder="Enter the meeting code "
-            />
+          <small
+            *ngIf="room_code.touched && room_code.invalid"
+            class="text-danger"
+          >
+            <i class="fa fa-times-circle text-danger"></i>
+            Please enter a meeting code.
+          </small>
 
-            <small
-              *ngIf="room_code.touched && room_code.invalid"
-              class="text-danger"
-            >
-              <i class="fa fa-times-circle text-danger"></i>
-              Please enter a meeting code.
-            </small>
-
-            <!-- pattern="^([a-zA-Z0-9]{8}+)-([a-zA-Z0-9]{4}+)-([a-zA-Z0-9]{4}+)-([a-zA-Z0-9]{12})$"
+          <!-- pattern="^([a-zA-Z0-9]{8}+)-([a-zA-Z0-9]{4}+)-([a-zA-Z0-9]{4}+)-([a-zA-Z0-9]{12})$"
             <div *ngIf="room_code.invalid && (room_code.dirty || room_code.touched)">
               <div *ngIf="room_code.errors.required">
                 <small class="text-danger">
@@ -80,22 +96,17 @@
                 </small>
               </div>
             </div> -->
-          </div>
+        </div>
 
-
-
-
-
-          <button
-            [disabled]="!joinMeet.valid"
-            class="btn btn-info"
-            [routerLink]="['/room', room_code.value]"
-            (click)="sendRoomId(room_code.value)"
-          >
-            Join the meeting
-          </button>
-        </form>
-
+        <button
+          [disabled]="!joinMeet.valid"
+          class="btn btn-info"
+          [routerLink]="['/room', room_code.value]"
+          (click)="sendRoomId(room_code.value)"
+        >
+          Join the meeting
+        </button>
+      </form>
     </div>
   </div>
 </div>

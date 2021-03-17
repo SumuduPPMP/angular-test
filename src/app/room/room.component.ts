@@ -1,19 +1,16 @@
-import { async } from '@angular/core/testing';
-//import { WebSocketService } from './../web-socket.service';
-import { element } from 'protractor';
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit,OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import * as io from 'socket.io-client';
 import * as SimplePeer from 'simple-peer';
 import { DataService } from './../data.service';
-import { createBrotliDecompress } from 'zlib';
-import { createCallChain } from 'typescript';
+import { Subscription } from 'rxjs';
+import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css'],
 })
-export class RoomComponent implements OnInit {
+export class RoomComponent implements OnInit, OnDestroy {
   @ViewChild('mainContainer') mainContainer: ElementRef;
   @ViewChild('mainVideoDiv') mainVideoDiv: ElementRef;
   @ViewChild('otherVideoDiv') otherVideoDiv: ElementRef;
@@ -23,9 +20,8 @@ export class RoomComponent implements OnInit {
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
-  //uri: string = 'https://angular-test-video.herokuapp.com';
-  //uri: string = 'ws://localhost:3000';
-  //Peer = require('simple-peer')
+  // testing uri for localhost
+  uri: string = 'ws://localhost:3000';
 
   peersRef: any = [];
   peersArray: any = [];
@@ -37,6 +33,7 @@ export class RoomComponent implements OnInit {
   micOn = true;
   videoOn = true;
   openFullScreen = true;
+  ischatOpen = false;
   cameraAvailable: boolean;
   screenShareActive: boolean;
   shareScreenId: string;
@@ -48,12 +45,23 @@ export class RoomComponent implements OnInit {
   mediaQuery;
   mediaStreamIdWithoutCamera: string;
   cameralessStreamId ="abcd";
+  newMessage: string;
+  newMessageAvailable: boolean;
+  showMessage$: Subscription;
 
   constructor(private data: DataService) {
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
-  }
+     // testing uri for localhost
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
 
+    this.showMessage$ = this.data.getMessage.subscribe((msg) => {
+      this.newMessage = msg;
+      if(this.newMessage!=" " && !this.ischatOpen){
+       this.newMessageAvailable= true;
+        this.showNewMessage();
+      }
+    });
+  }
   ngOnInit(): void {
     this.mediaQuery = window.matchMedia('(max-width: 767.98px)');
     console.log(this.roomID);
@@ -116,6 +124,10 @@ export class RoomComponent implements OnInit {
     })
   }
 
+  ngOnDestroy(): void {
+    this.showMessage$.unsubscribe();
+  }
+
   //functions.....
   coreFunction(stream) {
     try {
@@ -123,8 +135,11 @@ export class RoomComponent implements OnInit {
       const video = <HTMLVideoElement>document.createElement('video');
       video.muted = true;
       video.style.pointerEvents = 'none';
+      // video.style.width='100%';
+      // video.style.height='auto';
       this.userCount = 1;
       this.addVideoStream(video, stream);
+      console.log(this.roomID)
       this.socketRef.emit('join room', this.roomID);
       this.socketRef.on('all users', (users) => {
         this.usersArray = users;
@@ -423,7 +438,7 @@ export class RoomComponent implements OnInit {
     });
   }
   setRoomIdAndStates(isCamera) {
-    // get the room information
+    // get room information
     this.data.currentRoom.subscribe((data) => (this.roomID = data));
     this.data.mic.subscribe((data) => (this.micOn = data));
     this.data.camera.subscribe((data) => (this.videoOn = data));
@@ -467,6 +482,29 @@ export class RoomComponent implements OnInit {
     }
     var time = (hr + ':' + minu + ' ' + ampm).toString();
     this.currentTime = time;
+  }
+  chatOpenClose(){
+      this.newMessageAvailable= false;
+      document.querySelector("#chatSidebar").classList.toggle("sidebarOpen");
+      document.querySelector("#main").classList.toggle("addMargginForMain");
+      document.querySelector("#othervideo").classList.toggle("othervideoanimation");
+      this.ischatOpen = !this.ischatOpen
+      if (!this.mediaQuery.matches) {
+        document.querySelector("#timecard").classList.toggle("timecardanimation");
+      }
+  }
+  showNewMessage(){
+    document.querySelector("#newMsgAlart").classList.toggle("newMewssageOpen");
+    this.chatSound()
+    setTimeout(function() {
+      document.querySelector("#newMsgAlart").classList.toggle("newMewssageOpen");
+    }, 5000);
+  }
+  chatSound(){
+    let audio = new Audio()
+    audio.src="assets/alert1.mp3"
+    audio.load()
+    audio.play()
   }
   micOnOff() {
     var track = this.myStream.getAudioTracks()[0];

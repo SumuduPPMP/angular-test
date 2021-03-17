@@ -20,61 +20,84 @@
   </button>
 </div> -->
 
-<div #mainContainer class="container-fluid bg-light mobile-color">
-  <div class="row">
+<div #mainContainer class="container-fluid mobile-color">
+
+  <div id="chatSidebar" class="sidebar">
+    <div (click)="chatOpenClose()" class="closebtn" >
+      <i class="fas fa-times"></i>
+    </div>
+    <chat [socketRef] ="socketRef" [roomID] ="roomID"></chat>
+  </div>
+
+  <div class="row"  id="main">
     <div class="user-alart text-center">
       <div class="btn btn-info">Welcome To PPMP Meet</div>
     </div>
-    <div
-      class="timecard rounded border border-secondary d-flex justify-content-center align-items-center"
+    <div id="timecard"
+      class="timecard rounded border-bottom d-flex justify-content-center align-items-center"
     >
-      <div class="d-flex align-items-center m-2 videoBtns">
+      <div class="d-flex align-items-center m-2">
         <i class="fas fa-users mr-1"></i>
         <p style="font-size: medium">{{ userCount }}</p>
       </div>
       <h4>{{ currentTime }}</h4>
+
     </div>
+    <div id="newMsgAlart" class="msgAlart p-3" (click)="chatOpenClose()">{{newMessage}}</div>
     <div
       #mainVideoDiv
       class="col-md-12 mainVideoDiv d-flex align-items-center"
     ></div>
-    <div #otherVideoDiv class="otherVideoDiv mr-1"></div>
+    <div id="othervideo" #otherVideoDiv class="otherVideoDiv mr-1"></div>
   </div>
 
   <div
     #footer
     class="footer-bar border d-flex justify-content-center align-items-center"
   >
+  <button
+  type="button"
+  class="btn btn-sm m-2 videoBtns calbtn"
+  placement="top"
+  ngbTooltip="Leave Call"
+  routerLink="/leaveroom"
+  (click)="endCall()"
+>
+  <i class="fa fa-phone"></i>
+</button>
     <button
       type="button"
-      class="btn btn-outline-dark m-2 videoBtns"
+      class="btn btn-sm m-2 videoBtns cameraMicBtn"
+      [ngClass]="{ 'cameraMicOffActive': !micOn}"
       placement="top"
       ngbTooltip="{{ TooltipMic }}"
       (click)="micOnOff()"
     >
       <i *ngIf="micOn" class="fas fa-microphone"></i>
-      <i *ngIf="!micOn" class="fas fa-microphone-slash"></i>
-    </button>
-    <button
-      type="button"
-      class="btn btn-outline-danger m-2 videoBtns"
-      placement="top"
-      ngbTooltip="Leave Call"
-      routerLink="/leaveroom"
-      (click)="endCall()"
-    >
-      <i class="fa fa-phone"></i>
+      <i *ngIf="!micOn" class="fas fa-microphone-slash "></i>
     </button>
     <button
       [disabled]="!cameraAvailable"
       type="button"
-      class="btn btn-outline-dark m-2 videoBtns"
+      class="btn btn-sm m-2 videoBtns cameraMicBtn"
+      [ngClass]="{ 'cameraMicOffActive': !videoOn}"
       placement="top"
       ngbTooltip="{{ TooltipVideo }}"
       (click)="videoOnOff()"
     >
       <i *ngIf="videoOn" class="fas fa-video"></i>
       <i *ngIf="!videoOn" class="fas fa-video-slash"></i>
+    </button>
+    <button
+      type="button"
+      class="btn btn-sm m-2 videoBtns chatBtn"
+      [ngClass]="{ 'chatActive': ischatOpen}"
+      placement="top"
+      ngbTooltip="chat"
+      (click)="chatOpenClose()"
+    >
+      <div class="chatIndicator" [ngClass]="{ 'zeroOpacity': !newMessageAvailable, 'fullOpacity': newMessageAvailable }"></div>
+      <i class="fas fa-comment-dots chatIcon"></i>
     </button>
     <button
       *ngIf="screenShareActive"

@@ -1,3 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~bootstrap/dist/css/bootstrap.css";
 @import "~@fortawesome/fontawesome-free/css/all.css";
+
+.btn-info{
+  background-color : #067060 !important;
+  border-color: #067060 !important;
+}
+.btn-info:hover{
+  background-color : #059680 !important;
+  border-color : #059680 !important;
+}
+.text-info{
+  color: #39998a !important;
+}
+.btn-outline-info{
+  color:#067060 !important;
+  border-color: #067060 !important;
+}
+.btn-outline-info:hover{
+  color:#fff !important;
+  border-color: #067060 !important;
+  background-color: #067060 !important;
+}

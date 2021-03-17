@@ -9,6 +9,7 @@ import { CreateroomComponent } from './createroom/createroom.component';
 import { RoomComponent } from './room/room.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LeaveroomComponent } from './leaveroom/leaveroom.component';
+import { ChatComponent } from './chat/chat.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import { LeaveroomComponent } from './leaveroom/leaveroom.component';
     CreateroomComponent,
     RoomComponent,
     LeaveroomComponent,
+    ChatComponent,
   ],
   imports: [
     BrowserModule,

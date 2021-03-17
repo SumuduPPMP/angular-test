@@ -96,7 +96,19 @@ io.on('connection', socket => {
       //}
   })
 
+   /////////////////////// chat //////////////////////////////
+
+   socket.on('send message', message =>{
+    const roomID = socketToRoom[socket.id];
+      let room = users[roomID];
+      if (room) {
+        console.log(message)
+        socket.broadcast.emit("receive message",message);
+      }
+  })
+
 });
+
  setInterval(() => io.emit('time', new Date()), 1000);
 
 const port = process.env.PORT ||3000;

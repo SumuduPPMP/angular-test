@@ -1,0 +1,22 @@
+<div class="">
+<div class="chatArea" #scrollframe>
+  <div class="pr-3 pl-3 mt-1 mb-2" *ngFor="let msg of textChatArray" >
+    <div class="row mt-4 mb-4">
+      <div class="d-flex justify-content-center pl-1" style="width:50px">
+          <button *ngIf="msg.type=='sent'"class="btn chatUserIcon text-white mycolor">M</button>
+          <button *ngIf="msg.type!='sent'"class="btn chatUserIcon text-white othercolor">U</button>
+      </div>
+      <div class="col">
+        <div class="pr-3">{{msg.name}} <small class="text-muted ml-3">{{msg.time}}</small></div>
+        <div class="pr-1 text-left"><small>{{msg.message}}</small></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="input-group mt-2 px-2" style="position: absolute; bottom: 90px;">
+  <input type="text" class="form-control border"  name="textmessage" [(ngModel)]="textmessage" (keydown.enter)="sendMessage()" />
+  <div class="input-group-append">
+    <button class="btn btn-info" (click)="sendMessage()"><i class="fa fa-paper-plane"></i></button>
+  </div>
+</div>
+</div>
