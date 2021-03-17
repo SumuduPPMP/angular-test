@@ -21,7 +21,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   roomID: string;
   host = window.location.hostname;
   // testing uri for localhost
-  uri: string = 'ws://localhost:3000';
+  //uri: string = 'ws://localhost:3000';
 
   peersRef: any = [];
   peersArray: any = [];
@@ -51,8 +51,8 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   constructor(private data: DataService) {
      // testing uri for localhost
-    this.socketRef = io(this.uri);
-    //this.socketRef = io();
+    //this.socketRef = io(this.uri);
+    this.socketRef = io();
 
     this.showMessage$ = this.data.getMessage.subscribe((msg) => {
       this.newMessage = msg;
