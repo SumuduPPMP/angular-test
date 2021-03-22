@@ -26,7 +26,7 @@ io.on('connection', socket => {
       console.log("roomid is: " + roomID + "  aaa: " + users[roomID]);
       if (users[roomID]) {
           const length = users[roomID].length;
-          if (length === 6) {
+          if (length === 4) {
               socket.emit("room full");
               return;
           }
