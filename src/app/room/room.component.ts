@@ -1,9 +1,8 @@
-import { Component, OnInit,OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import {Component,OnInit,OnDestroy,ElementRef,ViewChild,} from '@angular/core';
 import * as io from 'socket.io-client';
 import * as SimplePeer from 'simple-peer';
 import { DataService } from './../data.service';
 import { Subscription } from 'rxjs';
-import {NgbPopover} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-room',
@@ -21,7 +20,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   roomID: string;
   host = window.location.hostname;
   // testing uri for localhost
-  uri: string = 'ws://localhost:3000';
+  //uri: string = 'ws://localhost:3000';
 
   peersRef: any = [];
   peersArray: any = [];
@@ -44,22 +43,22 @@ export class RoomComponent implements OnInit, OnDestroy {
   myStream: MediaStream;
   mediaQuery;
   mediaStreamIdWithoutCamera: string;
-  cameralessStreamId ="abcd";
+  cameralessStreamId = 'abcd';
   newMessage: string;
-  alartText:string;
-  alartType:number;
+  alartText: string;
+  alartType: number;
   newMessageAvailable: boolean;
   showMessage$: Subscription;
 
   constructor(private data: DataService) {
-     // testing uri for localhost
-  this.socketRef = io(this.uri);
-    //this.socketRef = io();
+    // testing uri for localhost
+    //this.socketRef = io(this.uri);
+    this.socketRef = io();
 
     this.showMessage$ = this.data.getMessage.subscribe((msg) => {
       this.newMessage = msg;
-      if(this.newMessage!=" " && !this.ischatOpen){
-       this.newMessageAvailable= true;
+      if (this.newMessage != ' ' && !this.ischatOpen) {
+        this.newMessageAvailable = true;
         this.showNewMessage();
       }
     });
@@ -69,11 +68,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     console.log(this.roomID);
     // hardcodeed room id for development purpose
     //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
-    this.commonAlart(1)
+    this.commonAlart(1);
 
     this.socketRef.on('user disconnect', (user_id) => {
       this.removeUserDiv(user_id);
-      this.commonAlart(2)
+      this.commonAlart(2);
     });
     this.socketRef.on('anyway disconnect', (user_id) => {
       this.removeUserDiv(user_id);
@@ -88,44 +87,42 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.mirrorAndFullScreenVideo(user_id);
     });
     this.socketRef.on('videoless stream', (stream_id) => {
-      this.mediaStreamIdWithoutCamera = stream_id
+      this.mediaStreamIdWithoutCamera = stream_id;
     });
     this.socketRef.on('time', (time) => {
       this.getCurrentTime();
     });
 
-    navigator.mediaDevices.enumerateDevices().then(devices => {
-      var cams = devices.filter(device => device.kind == "videoinput");
-      var mics = devices.filter(device => device.kind == "audioinput");
-      if(cams.length>0){
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      var cams = devices.filter((device) => device.kind == 'videoinput');
+      var mics = devices.filter((device) => device.kind == 'audioinput');
+      if (cams.length > 0) {
         navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        console.log("camera");
-        this.cameraAvailable = true;
-        this.myStream = stream;
-        this.coreFunction(stream);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-
-      } else{
-        console.log(" No camera");
-        navigator.mediaDevices
-          .getUserMedia({ video: false, audio: true })
+          .getUserMedia({ video: true, audio: true })
           .then((stream) => {
-            this.cameraAvailable = false;
+            console.log('camera');
+            this.cameraAvailable = true;
             this.myStream = stream;
-            this.socketRef.emit('without camera', stream.id)
             this.coreFunction(stream);
           })
           .catch((err) => {
             console.log(err);
           });
-
+      } else {
+        console.log(' No camera');
+        navigator.mediaDevices
+          .getUserMedia({ video: false, audio: true })
+          .then((stream) => {
+            this.cameraAvailable = false;
+            this.myStream = stream;
+            this.socketRef.emit('without camera', stream.id);
+            this.coreFunction(stream);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
-    })
+    });
   }
 
   ngOnDestroy(): void {
@@ -143,38 +140,30 @@ export class RoomComponent implements OnInit, OnDestroy {
       // video.style.height='auto';
       this.userCount = 1;
       this.addVideoStream(video, stream);
-      console.log(this.roomID)
+      console.log(this.roomID);
       this.socketRef.emit('join room', this.roomID);
       this.socketRef.on('all users', (users) => {
         this.usersArray = users;
         const peers = [];
         this.userCount = this.userCount + users.length;
         users.forEach((userID) => {
-          const peer = this.createPeer(
-            userID,
-            this.socketRef.id,
-            stream
-          );
+          const peer = this.createPeer(userID, this.socketRef.id, stream);
           this.peersRef.push({
             peerID: userID,
             peer,
           });
           peers.push(peer);
           this.addVideoStreamForNewUser(peer, userID);
-          console.log("room users");
+          console.log('room users');
         });
         this.peersArray = peers;
       });
 
       this.socketRef.on('user joined', (payload) => {
         //if(this.cameralessStreamId != payload.callerID){
-          this.newUserJoin = true;
+        this.newUserJoin = true;
         this.userCount++;
-        const peer = this.addPeer(
-          payload.signal,
-          payload.callerID,
-          stream
-        );
+        const peer = this.addPeer(payload.signal, payload.callerID, stream);
         this.peersRef.push({
           peerID: payload.callerID,
           peer,
@@ -183,9 +172,9 @@ export class RoomComponent implements OnInit, OnDestroy {
         console.log('user joind');
         this.addVideoStreamForNewUser(peer, payload.callerID);
 
-       // this.cameralessStreamId = payload.callerID
-       // }
-        this.commonAlart(3)
+        // this.cameralessStreamId = payload.callerID
+        // }
+        this.commonAlart(3);
       });
 
       this.socketRef.on('receiving returned signal', (payload) => {
@@ -204,14 +193,14 @@ export class RoomComponent implements OnInit, OnDestroy {
       stream,
     });
     peer.on('signal', (signal) => {
-       try{
-         console.log("sending signal:" + userToSignal);
-       this.socketRef.emit('sending signal', {
-         userToSignal,
-         callerID,
-         signal,
-       });
-      }catch(err){
+      try {
+        console.log('sending signal:' + userToSignal);
+        this.socketRef.emit('sending signal', {
+          userToSignal,
+          callerID,
+          signal,
+        });
+      } catch (err) {
         console.log(err);
       }
     });
@@ -253,28 +242,23 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
   addVideoStreamForNewUser(peer, userID) {
     peer.on('stream', (stream) => {
-
-    if(this.cameralessStreamId != stream.id){
-      if (this.mediaStreamIdWithoutCamera == stream.id) {
-        this.createDivforNoCamera(userID, stream);
-        //this.userCount--
-        console.log("divs for no camera");
-      } else {
-        const video = document.createElement('video');
-        video.srcObject = stream;
-        video.style.pointerEvents = 'none';
-        video.id = userID;
-        video.addEventListener('loadedmetadata', () => {
-          video.play();
-        });
-        this.createDivForTheVideo(video);
+      if (this.cameralessStreamId != stream.id) {
+        if (this.mediaStreamIdWithoutCamera == stream.id) {
+          this.createDivforNoCamera(userID, stream);
+          //this.userCount--
+          console.log('divs for no camera');
+        } else {
+          const video = document.createElement('video');
+          video.srcObject = stream;
+          video.style.pointerEvents = 'none';
+          video.id = userID;
+          video.addEventListener('loadedmetadata', () => {
+            video.play();
+          });
+          this.createDivForTheVideo(video);
+        }
+        this.cameralessStreamId = stream.id;
       }
-      this.cameralessStreamId = stream.id
-    }
-
-
-
-
     });
   }
   createDivforNoCamera(userID, stream) {
@@ -487,50 +471,47 @@ export class RoomComponent implements OnInit, OnDestroy {
     var time = (hr + ':' + minu + ' ' + ampm).toString();
     this.currentTime = time;
   }
-  commonAlart(alartType){
-    this.alartType = alartType
-    if(alartType == 1){
-      this.alartText = "Welcome To PPMP Meet"
-      //document.getElementById("commonAlart").classList.add("btn-info")
-      //document.querySelector("#commonAlart").classList.add("btn-info-alart")
+  commonAlart(alartType) {
+    this.alartType = alartType;
+    if (alartType == 1) {
+      this.alartText = 'Welcome To PPMP Meet';
     }
-    if(alartType == 2){
-      this.alartText = "A User Disconnected"
-      //document.getElementById("commonAlart").classList.add("btn-danger")
-      //document.querySelector("#commonAlart").classList.add("btn-danger-alart")
+    if (alartType == 2) {
+      this.alartText = 'A User Disconnected';
     }
-    if(alartType ==3){
-      this.alartText = "A User Joined"
-      //document.getElementById("commonAlart").classList.add("btn-info")
-      //document.querySelector("#commonAlart").classList.add("btn-info-alart")
+    if (alartType == 3) {
+      this.alartText = 'A User Joined';
     }
-    document.querySelector("#commonAlart").classList.toggle("commonAlartOpen");
-    setTimeout(function() {
-      document.querySelector("#commonAlart").classList.toggle("commonAlartOpen");
-    }, 5000);
-}
-  chatOpenClose(){
-      this.newMessageAvailable= false;
-      document.querySelector("#chatSidebar").classList.toggle("sidebarOpen");
-      document.querySelector("#main").classList.toggle("addMargginForMain");
-      document.querySelector("#othervideo").classList.toggle("othervideoanimation");
-      this.ischatOpen = !this.ischatOpen
-      if (!this.mediaQuery.matches) {
-        document.querySelector("#timecard").classList.toggle("timecardanimation");
-      }
-  }
-  showNewMessage(){
-    document.querySelector("#newMsgAlart").classList.toggle("newMewssageOpen");
-    this.chatSound()
-    setTimeout(function() {
-      document.querySelector("#newMsgAlart").classList.toggle("newMewssageOpen");
+    document.querySelector('#commonAlart').classList.toggle('commonAlartOpen');
+    setTimeout(function () {
+      document
+        .querySelector('#commonAlart').classList.toggle('commonAlartOpen');
     }, 5000);
   }
-  chatSound(){
-    let audio = new Audio()
-    audio.src="assets/alert1.mp3"
-    audio.load()
-    audio.play()
+  chatOpenClose() {
+    this.newMessageAvailable = false;
+    document.querySelector('#chatSidebar').classList.toggle('sidebarOpen');
+    document.querySelector('#main').classList.toggle('addMargginForMain');
+    document
+      .querySelector('#othervideo')
+      .classList.toggle('othervideoanimation');
+    this.ischatOpen = !this.ischatOpen;
+    if (!this.mediaQuery.matches) {
+      document.querySelector('#timecard').classList.toggle('timecardanimation');
+    }
+  }
+  showNewMessage() {
+    document.querySelector('#newMsgAlart').classList.toggle('newMewssageOpen');
+    this.chatSound();
+    setTimeout(function () {
+      document.querySelector('#newMsgAlart').classList.toggle('newMewssageOpen');
+    }, 5000);
+  }
+  chatSound() {
+    let audio = new Audio();
+    audio.src = 'assets/alert1.mp3';
+    audio.load();
+    audio.play();
   }
   micOnOff() {
     var track = this.myStream.getAudioTracks()[0];
