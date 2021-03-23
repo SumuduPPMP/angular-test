@@ -31,7 +31,8 @@
 
   <div class="row"  id="main">
     <div class="user-alart text-center">
-      <div class="btn btn-info">Welcome To PPMP Meet</div>
+      <div id="commonAlart" class="commonalart btn btn-info"
+      [ngClass]="{'btn-danger': alartType==2}">{{alartText}}</div>
     </div>
     <div id="timecard"
       class="timecard rounded border-bottom d-flex justify-content-center align-items-center"

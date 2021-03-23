@@ -10,6 +10,10 @@
   background-color : #059680 !important;
   border-color : #059680 !important;
 }
+.btn-danger{
+  background-color: tomato !important;
+  border-color: tomato !important;
+}
 .text-info{
   color: #39998a !important;
 }

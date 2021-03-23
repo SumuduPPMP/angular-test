@@ -21,7 +21,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   roomID: string;
   host = window.location.hostname;
   // testing uri for localhost
-  //uri: string = 'ws://localhost:3000';
+  uri: string = 'ws://localhost:3000';
 
   peersRef: any = [];
   peersArray: any = [];
@@ -46,13 +46,15 @@ export class RoomComponent implements OnInit, OnDestroy {
   mediaStreamIdWithoutCamera: string;
   cameralessStreamId ="abcd";
   newMessage: string;
+  alartText:string;
+  alartType:number;
   newMessageAvailable: boolean;
   showMessage$: Subscription;
 
   constructor(private data: DataService) {
      // testing uri for localhost
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+  this.socketRef = io(this.uri);
+    //this.socketRef = io();
 
     this.showMessage$ = this.data.getMessage.subscribe((msg) => {
       this.newMessage = msg;
@@ -67,9 +69,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     console.log(this.roomID);
     // hardcodeed room id for development purpose
     //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
+    this.commonAlart(1)
 
     this.socketRef.on('user disconnect', (user_id) => {
       this.removeUserDiv(user_id);
+      this.commonAlart(2)
     });
     this.socketRef.on('anyway disconnect', (user_id) => {
       this.removeUserDiv(user_id);
@@ -181,7 +185,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
        // this.cameralessStreamId = payload.callerID
        // }
-
+        this.commonAlart(3)
       });
 
       this.socketRef.on('receiving returned signal', (payload) => {
@@ -483,6 +487,28 @@ export class RoomComponent implements OnInit, OnDestroy {
     var time = (hr + ':' + minu + ' ' + ampm).toString();
     this.currentTime = time;
   }
+  commonAlart(alartType){
+    this.alartType = alartType
+    if(alartType == 1){
+      this.alartText = "Welcome To PPMP Meet"
+      //document.getElementById("commonAlart").classList.add("btn-info")
+      //document.querySelector("#commonAlart").classList.add("btn-info-alart")
+    }
+    if(alartType == 2){
+      this.alartText = "A User Disconnected"
+      //document.getElementById("commonAlart").classList.add("btn-danger")
+      //document.querySelector("#commonAlart").classList.add("btn-danger-alart")
+    }
+    if(alartType ==3){
+      this.alartText = "A User Joined"
+      //document.getElementById("commonAlart").classList.add("btn-info")
+      //document.querySelector("#commonAlart").classList.add("btn-info-alart")
+    }
+    document.querySelector("#commonAlart").classList.toggle("commonAlartOpen");
+    setTimeout(function() {
+      document.querySelector("#commonAlart").classList.toggle("commonAlartOpen");
+    }, 5000);
+}
   chatOpenClose(){
       this.newMessageAvailable= false;
       document.querySelector("#chatSidebar").classList.toggle("sidebarOpen");
