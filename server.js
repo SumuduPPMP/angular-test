@@ -73,19 +73,41 @@ io.on('connection', socket => {
   });
 
   socket.on('sharescreen active', user_id =>{
-    const roomID = socketToRoom[socket.id];
+      //get room Id
+      const roomID = socketToRoom[socket.id];
+      //get room userrs_id array
       let room = users[roomID];
-      if (room) {
-        socket.broadcast.emit("sharescreen active",user_id);
-      }
+
+      const index = room.indexOf(user_id);
+      if(index !== -1){
+        //remove screen shareing id from users
+        room = room.filter(id => id !== socket.id);
+    }
+
+      room.forEach((user) => {
+        io.to(user).emit("sharescreen active",user_id);
+      })
+      // reset the users array
+      room=users[roomID];
   })
 
   socket.on('sharescreen ended', user_id =>{
     const roomID = socketToRoom[socket.id];
       let room = users[roomID];
-      if (room) {
-        socket.broadcast.emit("sharescreen ended",user_id);
-      }
+
+      const index = room.indexOf(user_id);
+      if(index !== -1){
+        //remove screen shareing id from users
+        room = room.filter(id => id !== socket.id);
+    }
+      room.forEach((user) => {
+        io.to(user).emit("sharescreen ended",user_id);
+      })
+      // reset the users array
+      room=users[roomID];
+      // if (room) {
+      //   socket.broadcast.emit("sharescreen ended",user_id);
+      // }
   })
 
   socket.on('without camera', stream_id =>{
@@ -101,6 +123,7 @@ io.on('connection', socket => {
    socket.on('send message', message =>{
     const roomID = socketToRoom[socket.id];
       let room = users[roomID];
+
       if (room) {
         console.log(message)
         socket.broadcast.emit("receive message",message);
