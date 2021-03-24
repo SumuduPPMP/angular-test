@@ -61,17 +61,43 @@ io.on('connection', socket => {
     })
   })
 
+//   socket.on('disconnect', () => {
+//     const roomID = socketToRoom[socket.id];
+//     let room = users[roomID];
+//     console.log(room)
+// console.log(socket.id)
+//     room = room.filter(id => id !== socket.id);
+//     users[roomID] = room;
+
+//     room.forEach((user) => {
+//       io.to(user).emit("anyway disconnect", socket.id);
+//     })
+//   });
+
+  /////////
+  // socket.on('user disconnect', user_id =>{
+  //   const roomID = socketToRoom[socket.id];
+  //     let room = users[roomID];
+  //     if (room) {
+  //       console.log("leave call: " + user_id);
+  //       socket.broadcast.emit("user disconnect",user_id);
+  //       //io.sockets.emit('users_count', clients);
+  //         room = room.filter(id => id !== socket.id);
+  //         users[roomID] = room;
+  //     }
+
+  // })
+
   socket.on('disconnect', () => {
-    const roomID = socketToRoom[socket.id];
-    let room = users[roomID];
-
-    room = room.filter(id => id !== socket.id);
-    users[roomID] = room;
-
-    room.forEach((user) => {
-      io.to(user).emit("anyway disconnect", socket.id);
-    })
+      const roomID = socketToRoom[socket.id];
+      let room = users[roomID];
+      if (room) {
+        socket.broadcast.emit("anyway disconnect",socket.id);
+          room = room.filter(id => id !== socket.id);
+          users[roomID] = room;
+      }
   });
+  /////
 
   socket.on('sharescreen active', user_id => {
     //get room Id

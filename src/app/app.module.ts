@@ -10,6 +10,7 @@ import { RoomComponent } from './room/room.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LeaveroomComponent } from './leaveroom/leaveroom.component';
 import { ChatComponent } from './chat/chat.component';
+import { RoomfullComponent } from './roomfull/roomfull.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { ChatComponent } from './chat/chat.component';
     RoomComponent,
     LeaveroomComponent,
     ChatComponent,
+    RoomfullComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,6 +29,7 @@ import { ChatComponent } from './chat/chat.component';
       {path:'', component:CreateroomComponent},
       {path:'room/:roomID', component:RoomComponent},
       {path:'leaveroom', component:LeaveroomComponent},
+      {path:'roomfull', component:RoomfullComponent},
 
     ]),
     NgbModule,

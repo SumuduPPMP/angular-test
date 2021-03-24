@@ -1,4 +1,5 @@
 import {Component,OnInit,OnDestroy,ElementRef,ViewChild,} from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import * as io from 'socket.io-client';
 import * as SimplePeer from 'simple-peer';
 import { DataService } from './../data.service';
@@ -50,7 +51,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   newMessageAvailable: boolean;
   showMessage$: Subscription;
 
-  constructor(private data: DataService) {
+  constructor(private data: DataService,private router: Router) {
     // testing uri for localhost
     //this.socketRef = io(this.uri);
     this.socketRef = io();
@@ -70,9 +71,11 @@ export class RoomComponent implements OnInit, OnDestroy {
     //this.roomID = '6e9473f0-e1e3-11ea-8490-b3d681d4fa88';
     this.commonAlart(1);
 
+    this.socketRef.on('room full', (user_id) => {
+      this.router.navigate(['/roomfull']);
+    });
     this.socketRef.on('user disconnect', (user_id) => {
-      this.removeUserDiv(user_id);
-      this.commonAlart(2);
+      //this.removeUserDiv(user_id);
     });
     this.socketRef.on('anyway disconnect', (user_id) => {
       this.removeUserDiv(user_id);
@@ -409,6 +412,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.videoDivArray.forEach((div) => {
       var removeVideo = div.firstElementChild;
       if (removeVideo.id == userID) {
+        this.commonAlart(2);
         this.userCount--;
         div.remove();
         const index = this.videoDivArray.indexOf(div);
