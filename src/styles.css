@@ -26,3 +26,7 @@
   border-color: #067060 !important;
   background-color: #067060 !important;
 }
+.dark-bg-model {
+  background-color: #093d35;
+  opacity: 1 !important;
+}

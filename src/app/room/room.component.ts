@@ -1,5 +1,6 @@
 import {Component,OnInit,OnDestroy,ElementRef,ViewChild,} from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import * as io from 'socket.io-client';
 import * as SimplePeer from 'simple-peer';
 import { DataService } from './../data.service';
@@ -15,13 +16,14 @@ export class RoomComponent implements OnInit, OnDestroy {
   @ViewChild('mainVideoDiv') mainVideoDiv: ElementRef;
   @ViewChild('otherVideoDiv') otherVideoDiv: ElementRef;
   @ViewChild('footer') footer: ElementRef;
+  @ViewChild('content') private content;
 
   ownVideo;
   socketRef: any;
   roomID: string;
   host = window.location.hostname;
   // testing uri for localhost
-  //uri: string = 'ws://localhost:3000';
+  uri: string = 'ws://localhost:3000';
 
   peersRef: any = [];
   peersArray: any = [];
@@ -51,10 +53,10 @@ export class RoomComponent implements OnInit, OnDestroy {
   newMessageAvailable: boolean;
   showMessage$: Subscription;
 
-  constructor(private data: DataService,private router: Router) {
+  constructor(private data: DataService,private router: Router,private modalService: NgbModal) {
     // testing uri for localhost
-    //this.socketRef = io(this.uri);
-    this.socketRef = io();
+    this.socketRef = io(this.uri);
+    //this.socketRef = io();
 
     this.showMessage$ = this.data.getMessage.subscribe((msg) => {
       this.newMessage = msg;
@@ -96,6 +98,16 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.getCurrentTime();
     });
 
+// check media device permission state
+    navigator.permissions.query({ name: "camera" }).then(res => {
+      if(res.state == "granted"){
+         console.log("has permission")
+      }else{
+        console.log("No permission")
+        this.openModel(this.content)
+      }
+  });
+///////////////////////////////////////
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       var cams = devices.filter((device) => device.kind == 'videoinput');
       var mics = devices.filter((device) => device.kind == 'audioinput');
@@ -646,5 +658,8 @@ export class RoomComponent implements OnInit, OnDestroy {
         }
       }
     });
+  }
+  openModel(content) {
+    this.modalService.open(content, { centered: true,size: 'lg',backdropClass: 'dark-bg-model ' });
   }
 }

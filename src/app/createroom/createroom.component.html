@@ -110,3 +110,13 @@
     </div>
   </div>
 </div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-body p-5">
+    <h4 class="text-center">Allow PPMP MEET to use your camera and microphone</h4>
+    <p class="mt-4 text-muted">PPMP MEET needs access to your camera and microphone so that other participants
+      can see and hear you. PPMP MEET will ask you to confirm this decision on each browser and computer you see.</p>
+    <button type="button" class="mt-2 btn btn-info float-right" (click)="modal.close('Close click')">Close</button>
+  </div>
+</ng-template>
