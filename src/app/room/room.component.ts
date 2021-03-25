@@ -104,10 +104,13 @@ export class RoomComponent implements OnInit, OnDestroy {
       var cams = devices.filter((device) => device.kind == 'videoinput');
       var mics = devices.filter((device) => device.kind == 'audioinput');
       // check media device permission state
-      if(mics.length > 0 || cams.length > 0){
+      if(cams.length > 0){
         //devices available and check media device permission state
-        this.checkPermissions()
-      }else{
+        this.checkPermissions('camera')
+      }else if(mics.length > 0 ){
+        this.checkPermissions('microphone')
+      }
+      else{
         //devices unavailable
         this.openModel(this.devicecontent)
         this.cameraAvailable = false;
@@ -147,8 +150,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
   }
   // check media device permission state
-checkPermissions(){
-  navigator.permissions.query({ name: "camera" }).then(res => {
+  checkPermissions(device){
+  navigator.permissions.query({ name: device }).then(res => {
     if(res.state == "granted"){
        console.log("has permission")
     }else{

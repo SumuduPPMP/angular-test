@@ -43,9 +43,18 @@ export class CreateroomComponent implements OnInit {
       var cams = devices.filter((device) => device.kind == 'videoinput');
       var mics = devices.filter((device) => device.kind == 'audioinput');
       // check media device permission state
-      if(mics.length > 0 || cams.length > 0){
+      if(cams.length > 0){
         //devices available and check media device permission state
         navigator.permissions.query({ name: 'camera' }).then((res) => {
+          if (res.state == 'granted') {
+            console.log('has permission');
+          } else {
+            console.log('No permission');
+            this.openModel(this.permissioncontent)
+          }
+        });
+      }else if(mics.length > 0){
+        navigator.permissions.query({ name: 'microphone' }).then((res) => {
           if (res.state == 'granted') {
             console.log('has permission');
           } else {
