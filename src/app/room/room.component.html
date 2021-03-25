@@ -22,19 +22,19 @@
 
 <div #mainContainer class="container-fluid mobile-color">
 
-  <div id="chatSidebar" class="sidebar">
+  <div id="chatSidebar" class="sidebar" *ngIf="cameraAvailable || micAvailable">
     <div (click)="chatOpenClose()" class="closebtn" >
       <i class="fas fa-times"></i>
     </div>
     <chat [socketRef] ="socketRef" [roomID] ="roomID"></chat>
   </div>
 
-  <div class="row"  id="main">
+  <div class="row"  id="main" >
     <div class="user-alart text-center">
       <div id="commonAlart" class="commonalart btn btn-info"
       [ngClass]="{'btn-danger': alartType==2}">{{alartText}}</div>
     </div>
-    <div id="timecard"
+    <div id="timecard " *ngIf="cameraAvailable || micAvailable"
       class="timecard rounded border-bottom d-flex justify-content-center align-items-center"
     >
       <div class="d-flex align-items-center m-2">
@@ -52,7 +52,7 @@
     <div id="othervideo" #otherVideoDiv class="otherVideoDiv mr-1"></div>
   </div>
 
-  <div
+  <div *ngIf="cameraAvailable || micAvailable"
     #footer
     class="footer-bar border d-flex justify-content-center align-items-center"
   >
@@ -67,6 +67,7 @@
   <i class="fa fa-phone"></i>
 </button>
     <button
+      [disabled]="!micAvailable"
       type="button"
       class="btn btn-sm m-2 videoBtns cameraMicBtn"
       [ngClass]="{ 'cameraMicOffActive': !micOn}"
@@ -153,11 +154,23 @@
   </div>
 </div>
 
-<ng-template #content let-modal>
-  <div class="modal-body p-5">
+<ng-template #permissioncontent let-modal>
+  <div class="modal-body p-5 text-center">
     <h4 class="text-center">Allow PPMP MEET to use your camera and microphone</h4>
-    <p class="mt-4 text-muted">PPMP MEET needs access to your camera and microphone so that other participants
+    <p class="mt-4 text-muted text-center">PPMP MEET needs access to your camera and microphone so that other participants
       can see and hear you. PPMP MEET will ask you to confirm this decision on each browser and computer you see.</p>
-    <button type="button" class="mt-2 btn btn-info float-right" (click)="modal.close('Close click')">Close</button>
+      <p class="text-muted text-center"><b>Just allow PPMP MEET to access your camera and microphone and refresh the browser</b></p>
+    <button type="button" class="mt-2 btn btn-info ">More Info</button>
+  </div>
+</ng-template>
+<ng-template #devicecontent let-modal>
+  <div class="modal-body p-5">
+    <h4 class="text-center">Access Denied from PPMP MEET</h4>
+    <div class="container d-flex justify-content-center my-4">
+      <i class='far fa-frown text-muted' style='font-size:120px;opacity: 0.3;'></i>
+    </div>
+    <p class="mt-4 text-muted text-center">PPMP MEET needs a camera or a microphone for better experience so that other participants
+      can see and hear you.</p>
+    <!-- <button type="button" class="mt-2 btn btn-info float-right" (click)="modal.close('Close click')">Close</button> -->
   </div>
 </ng-template>

@@ -12,7 +12,7 @@
   background-color:#fcfcfc;
   width: 100%;
   height: 75px;
-  z-index: 1000000;
+  z-index: 999;
   animation: footerUp 2s;
 }
 .chatBtn{

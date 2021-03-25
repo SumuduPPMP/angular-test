@@ -16,7 +16,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   @ViewChild('mainVideoDiv') mainVideoDiv: ElementRef;
   @ViewChild('otherVideoDiv') otherVideoDiv: ElementRef;
   @ViewChild('footer') footer: ElementRef;
-  @ViewChild('content') private content;
+  @ViewChild('permissioncontent') private permissioncontent;
+  @ViewChild('devicecontent') private devicecontent;
 
   ownVideo;
   socketRef: any;
@@ -37,6 +38,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   openFullScreen = true;
   ischatOpen = false;
   cameraAvailable: boolean;
+  micAvailable: boolean;
   screenShareActive: boolean;
   shareScreenId: string;
   TooltipMic: string;
@@ -98,19 +100,23 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.getCurrentTime();
     });
 
-// check media device permission state
-    navigator.permissions.query({ name: "camera" }).then(res => {
-      if(res.state == "granted"){
-         console.log("has permission")
-      }else{
-        console.log("No permission")
-        this.openModel(this.content)
-      }
-  });
-///////////////////////////////////////
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       var cams = devices.filter((device) => device.kind == 'videoinput');
       var mics = devices.filter((device) => device.kind == 'audioinput');
+      // check media device permission state
+      if(mics.length > 0 || cams.length > 0){
+        //devices available and check media device permission state
+        this.checkPermissions()
+      }else{
+        //devices unavailable
+        this.openModel(this.devicecontent)
+        this.cameraAvailable = false;
+        this.micAvailable = false;
+      }
+      // check camera and microphone
+      // checkmicrophone
+      if (mics.length > 0 && mics[0].deviceId !="")this.micAvailable = true;
+      // check camera
       if (cams.length > 0) {
         navigator.mediaDevices
           .getUserMedia({ video: true, audio: true })
@@ -122,9 +128,10 @@ export class RoomComponent implements OnInit, OnDestroy {
           })
           .catch((err) => {
             console.log(err);
+            console.log("No microphone ERROR")
           });
-      } else {
-        console.log(' No camera');
+      }else{
+        console.log('No camera');
         navigator.mediaDevices
           .getUserMedia({ video: false, audio: true })
           .then((stream) => {
@@ -139,6 +146,17 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
   }
+  // check media device permission state
+checkPermissions(){
+  navigator.permissions.query({ name: "camera" }).then(res => {
+    if(res.state == "granted"){
+       console.log("has permission")
+    }else{
+      console.log("No permission")
+      this.openModel(this.permissioncontent)
+    }
+});
+}
 
   ngOnDestroy(): void {
     this.showMessage$.unsubscribe();
@@ -660,6 +678,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
   }
   openModel(content) {
-    this.modalService.open(content, { centered: true,size: 'lg',backdropClass: 'dark-bg-model ' });
+    this.modalService.open(content, { centered: true,size: 'lg',backdropClass: 'dark-bg-model ',backdrop : 'static', keyboard :false });
   }
 }
