@@ -17,10 +17,13 @@ import { v1 as uuid } from 'uuid';
 export class CreateroomComponent implements OnInit {
   @ViewChild('ownVideo') video: ElementRef;
   @ViewChild('ownVideoDiv') videoDiv: ElementRef;
-  @ViewChild('content') private content;
+  @ViewChild('permissioncontent') private permissioncontent;
+  @ViewChild('devicecontent') private devicecontent;
   roomID: string;
   micOn = true;
   videoOn = true;
+  cameraAvailable: boolean;
+  micAvailable: boolean;
   TooltipMic = 'Turn off mic';
   TooltipVideo = 'Turn off camera';
   myStream;
@@ -28,16 +31,6 @@ export class CreateroomComponent implements OnInit {
 
   ngOnInit(): void {
     //this.roomID = uuid();
-    // check media device permission state
-    navigator.permissions.query({ name: 'camera' }).then((res) => {
-      if (res.state == 'granted') {
-        console.log('has permission');
-      } else {
-        console.log('No permission');
-        this.openModel(this.content)
-      }
-    });
-    ///////////////////////////////////////
   }
   sendRoomId(room_id) {
     this.roomID = room_id;
@@ -46,20 +39,68 @@ export class CreateroomComponent implements OnInit {
     this.data.setCameraState(this.videoOn);
   }
   ngAfterViewInit() {
-    const myVideo = this.video.nativeElement;
-    myVideo.muted = true;
-    navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-        audio: true,
-      })
-      .then((stream) => {
-        this.myStream = stream;
-        this.addmyVideoStream(myVideo, stream);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      var cams = devices.filter((device) => device.kind == 'videoinput');
+      var mics = devices.filter((device) => device.kind == 'audioinput');
+      // check media device permission state
+      if(mics.length > 0 || cams.length > 0){
+        //devices available and check media device permission state
+        navigator.permissions.query({ name: 'camera' }).then((res) => {
+          if (res.state == 'granted') {
+            console.log('has permission');
+          } else {
+            console.log('No permission');
+            this.openModel(this.permissioncontent)
+          }
+        });
+      }else{
+        //devices unavailable
+        this.openModel(this.devicecontent)
+      }
+      // check camera and microphone
+      if (mics.length > 0){
+        this.micAvailable = true;
+      }
+      if (cams.length > 0){
+        this.cameraAvailable = true;
+      }
+      if (cams.length > 0){
+        const myVideo = this.video.nativeElement;
+      myVideo.muted = true;
+      navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+          audio: true,
+        })
+        .then((stream) => {
+          this.cameraAvailable = true;
+          this.myStream = stream;
+          this.addmyVideoStream(myVideo, stream);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      }else{
+        const myVideo = this.video.nativeElement;
+      myVideo.muted = true;
+      navigator.mediaDevices
+        .getUserMedia({
+          video: false,
+          audio: true,
+        })
+        .then((stream) => {
+          this.myStream = stream;
+          this.addmyVideoStream(myVideo, stream);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      }
+
+
+    });
+
+
   }
   addmyVideoStream(video, stream) {
     video.srcObject = stream;
@@ -100,6 +141,6 @@ export class CreateroomComponent implements OnInit {
 
   }
   openModel(content) {
-    this.modalService.open(content, { centered: true,size: 'lg',backdropClass: 'dark-bg-model ' });
+    this.modalService.open(content, { centered: true,size: 'lg',backdropClass: 'dark-bg-model ',backdrop : 'static', keyboard :false });
   }
 }

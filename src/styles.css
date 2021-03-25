@@ -29,4 +29,5 @@
 .dark-bg-model {
   background-color: #093d35;
   opacity: 1 !important;
+  z-index: 1000 !important;
 }
