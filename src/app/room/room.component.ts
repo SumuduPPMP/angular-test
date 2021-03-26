@@ -100,6 +100,8 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.getCurrentTime();
     });
 
+    //setInterval(() => this.socketRef.emit('user count', this.roomID), 1000);
+
     navigator.mediaDevices.enumerateDevices().then((devices) => {
       var cams = devices.filter((device) => device.kind == 'videoinput');
       var mics = devices.filter((device) => device.kind == 'audioinput');

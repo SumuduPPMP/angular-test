@@ -34,7 +34,7 @@
       <div id="commonAlart" class="commonalart btn btn-info"
       [ngClass]="{'btn-danger': alartType==2}">{{alartText}}</div>
     </div>
-    <div id="timecard " *ngIf="cameraAvailable || micAvailable"
+    <div id="timecard" *ngIf="cameraAvailable || micAvailable"
       class="timecard rounded border-bottom d-flex justify-content-center align-items-center"
     >
       <div class="d-flex align-items-center m-2">
@@ -156,11 +156,11 @@
 
 <ng-template #permissioncontent let-modal>
   <div class="modal-body p-5 text-center">
-    <h4 class="text-center">Allow PPMP MEET to use your camera and microphone</h4>
-    <p class="mt-4 text-muted text-center">PPMP MEET needs access to your camera and microphone so that other participants
+    <h4 class="">Allow PPMP MEET to use your camera and microphone</h4>
+    <p class="mt-4 text-muted">PPMP MEET needs access to your camera and microphone so that other participants
       can see and hear you. PPMP MEET will ask you to confirm this decision on each browser and computer you see.</p>
-      <p class="text-muted text-center"><b>Just allow PPMP MEET to access your camera and microphone and refresh the browser</b></p>
-    <button type="button" class="mt-2 btn btn-info ">More Info</button>
+      <p class="text-muted ">Just allow PPMP MEET to access your camera and microphone and refresh the browser</p>
+    <button type="button" class="mt-2 btn btn-info">More Info</button>
   </div>
 </ng-template>
 <ng-template #devicecontent let-modal>

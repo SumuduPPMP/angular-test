@@ -23,7 +23,6 @@ const socketToRoom = {};
 
 io.on('connection', socket => {
   socket.on("join room", roomID => {
-    console.log("roomid is: " + roomID + "  aaa: " + users[roomID]);
     if (users[roomID]) {
       const length = users[roomID].length;
       if (length === 4) {
@@ -34,9 +33,10 @@ io.on('connection', socket => {
     } else {
       users[roomID] = [socket.id];
     }
+    console.log("roomid is: " + roomID + "  users: " + users[roomID]);
     socketToRoom[socket.id] = roomID;
     const usersInThisRoom = users[roomID].filter(id => id !== socket.id);
-
+    // send users in room(without receiver) to requested user
     socket.emit("all users", usersInThisRoom);
   });
 
@@ -168,6 +168,13 @@ io.on('connection', socket => {
     //   socket.broadcast.emit("receive message",message);
     // }
   })
+
+  /////////////////////// users count //////////////////////////////
+  // socket.on('user count', room_id => {
+  //   const roomID = socketToRoom[socket.id];
+  //   let room = users[roomID];
+  //   console.log(roomID,room, room.length)
+  // })
 
 });
 

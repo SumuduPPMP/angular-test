@@ -207,6 +207,9 @@
       z-index: 101;
       border-radius: 0px !important;
     }
+    .closebtn {
+      margin-top:12px !important;
+    }
     .mobile-color{
       background-color: #202124d8;
     }
